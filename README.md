@@ -12,7 +12,19 @@ Data Analysis with Python
   - Shell mode
   - Jupyter notebook
 - NumPy
+  - The n-dimensional array
+  - Creating arrays
+    - From a sequence
+    - Ones, zeros, empty, full, linspace, logspace
+    - Random numbers
+  - Shape and reshape
+  - Indexing and slicing
+  - Arithmetic operations
+  - Broadcasting
+  - Sum, mean, min, max
+  - Applying methods to specific axes
 - pandas
+  - Why another package on top of NumPy?
 - Matplotlib
 
 ---
