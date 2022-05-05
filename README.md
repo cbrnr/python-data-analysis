@@ -14,12 +14,9 @@ Data Analysis with Python
 - NumPy
   - The n-dimensional array
   - Creating arrays
-    - From a sequence
-    - Ones, zeros, empty, full, linspace, logspace
-    - Random numbers
   - Shape and reshape
   - Indexing and slicing
-  - Arithmetic operations
+  - Array operations
   - Broadcasting
   - Sum, mean, min, max
   - Applying methods to specific axes
