@@ -976,6 +976,31 @@ array([[1, 0, 1, 0, 1, 0, 1, 0],
        [0, 1, 0, 1, 0, 1, 0, 1]])
 ```
 
+## Sampling from an array
+Given an array and a random generator, it is possible to create a random sample from the array (with or without replacement) using the `choice()` method of the random generator:
+
+```python
+>>> rng = np.random.default_rng(1)
+>>> x = np.array([0, 1])
+>>> rng.choice([0, 1], size=20)
+```
+```
+array([0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0])
+```
+
+## Shuffling an array
+Similarly, the `shuffle()` method shuffles a given array in place:
+
+```python
+>>> x = np.arange(10)
+>>> rng.shuffle(x)  # rng is defined in the previous example
+>>> x
+```
+```
+array([8, 3, 1, 6, 9, 7, 0, 2, 4, 5])
+```
+
+
 # Additional resources
 The [official NumPy website](https://numpy.org/doc/stable/index.html) contains excellent documentation and many tutorials. I specifically recommend the following tutorials for beginners:
 
@@ -987,3 +1012,4 @@ If you are coming from MATLAB, this tutorial is for you:
 - [NumPy for MATLAB users](https://numpy.org/doc/stable/user/numpy-for-matlab-users.html)
 
 # Exercises
+- [100 NumPy Exercises](https://github.com/rougier/numpy-100) ([Solutions](https://github.com/rougier/numpy-100/blob/master/100_Numpy_exercises_with_solutions.md))
