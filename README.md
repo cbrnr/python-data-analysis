@@ -11,7 +11,7 @@ Data Analysis with Python
   - Magic commands
   - Shell mode
   - Jupyter notebook
-- NumPy
+- [NumPy](numpy.md)
   - The n-dimensional array
   - Creating arrays
   - Shape and reshape

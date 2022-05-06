@@ -670,6 +670,44 @@ The following slices can be abbreviated using `...` notation:
 - `x[:, 1, :, :, 4]` is equal to `x[:, 1, ..., 4]`
 - `x[:, :, :, :, 3]` is equal to `x[..., 3]`
 
+## Fancy indexing
+In contrast to lists, we can even use arrays (or lists) as indices inside the square brackets to pull out several individual elements. This is called fancy indexing.
+
+```python
+>>> x = np.arange(3, 19, 2, dtype=np.int64)
+>>> x
+```
+```
+array([ 3,  5,  7,  9, 11, 13, 15, 17])
+```
+```python
+>>> x[[1, 5, 1, 0]]  # elements 1, 5, 1, and 0
+```
+```
+array([ 5, 13,  5,  3])
+```
+
+It is also possible to use boolean values in fancy indexing. This can be used to filter values in an array, because the result will contain only those values corresponding to `True` locations:
+
+```python
+>>> x[[True, False, False, False, True, False, True, False]]
+```
+```
+array([ 3, 11, 15])
+```
+
+```python
+>>> x > 9  # boolean array
+```
+```
+array([False, False, False, False,  True,  True,  True,  True])
+```
+```python
+>>> x[x > 9]
+```
+```
+array([11, 13, 15, 17])
+```
 
 # Array operations
 ## Elementwise operations
@@ -815,5 +853,51 @@ array([ 7., 22., 37., 52.])
 
 In this example, `y` has shape `(4, 3, 5)`. Because we compute the mean across axes `1` and `2` (remember that Python starts counting at zero), this leaves only axis `0`. Because axis `0` has four elements, we get four individual means.
 
-# Broadcasting
+## Universal functions
+Other useful functions are directly available in the `numpy` namespace, for example `np.sin()`, `np.cos()`, `np.exp()`, `np.sqrt()`, and so on. They are vectorized (and therefore operate on all elements) and are referred to as *universal functions* (or short *ufuncs*).
 
+# Broadcasting
+Even when two array shapes are different, calculations still work if certain conditions are met. The rules for this so-called *broadcasting* are:
+
+1. If two arrays have different shapes, the array with fewer dimensions will automatically get new dimensions with size 1 on the left until it matches the number of the larger array.
+2. Dimensions with size 1 are automatically repeated to match the size of the largest array in that dimension. The corresponding value will be repeated.
+
+If the shapes of the two arrays are the same after these two steps, NumPy is able to compute the result. If the dimensions do not match, the operation will result in an error ("operands could not be broadcast together").
+
+Let's illustrate these rules with some examples:
+
+```python
+>>> x = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
+>>> y = np.ones((2, 3), dtype=int)  # shape (2, 3)
+>>> x + y  # works
+```
+```
+array([[2, 3, 4],
+       [2, 3, 4]])
+```
+
+```python
+>>> x = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
+>>> y = np.ones((2, 4), dtype=int)  # shape (2, 4)
+>>> x + y  # does not work because shapes (2, 3) and (2, 4) do not match
+```
+```
+array([[2, 3, 4],
+       [2, 3, 4]])
+```
+
+```python
+>>> x = np.arange(6).reshape((2, 3))  # shape (2, 3) -> (1, 2, 3) -> (3, 2, 3)
+>>> y = np.arange(18).reshape((3, 2, 3))  # shape (3, 2, 3)
+>>> x + y  # works
+```
+```
+array([[[ 0,  2,  4],
+        [ 6,  8, 10]],
+
+       [[ 6,  8, 10],
+        [12, 14, 16]],
+
+       [[12, 14, 16],
+        [18, 20, 22]]])
+```
