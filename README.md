@@ -19,7 +19,8 @@ Data Analysis with Python
   - [Indexing and slicing](numpy.md#indexing-and-slicing)
   - [Array operations](numpy.md#array-operations)
   - [Broadcasting](numpy.md#broadcasting)
-  - Applying methods to specific axes
+  - [Useful functions](numpy.md#useful-functions)
+  - [Exercises](numpy.md#exercises)
 - pandas
   - Why another package on top of NumPy?
 - Matplotlib

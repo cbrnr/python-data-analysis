@@ -674,39 +674,49 @@ The following slices can be abbreviated using `...` notation:
 In contrast to lists, we can even use arrays (or lists) as indices inside the square brackets to pull out several individual elements. This is called fancy indexing.
 
 ```python
->>> x = np.arange(3, 19, 2, dtype=np.int64)
+>>> x = np.arange(10, 20, dtype=np.int64)
 >>> x
 ```
 ```
-array([ 3,  5,  7,  9, 11, 13, 15, 17])
+array([10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
 ```
 ```python
 >>> x[[1, 5, 1, 0]]  # elements 1, 5, 1, and 0
 ```
 ```
-array([ 5, 13,  5,  3])
+array([11, 15, 11, 10])
 ```
 
 It is also possible to use boolean values in fancy indexing. This can be used to filter values in an array, because the result will contain only those values corresponding to `True` locations:
 
 ```python
->>> x[[True, False, False, False, True, False, True, False]]
+>>> x[[True, False, False, False, True, False, True, False, False, True]]
 ```
 ```
-array([ 3, 11, 15])
+array([10, 14, 16, 19])
 ```
 
 ```python
->>> x > 9  # boolean array
+>>> x > 15  # boolean array
 ```
 ```
-array([False, False, False, False,  True,  True,  True,  True])
+array([False, False, False, False, False, False,  True,  True,  True, True])
 ```
 ```python
->>> x[x > 9]
+>>> x[x > 15]
 ```
 ```
-array([11, 13, 15, 17])
+array([16, 17, 18, 19])
+```
+
+We can even use indexing in an assignment. For example, let's assume we wanted to set all odd numbers to `-1`:
+
+```python
+>>> x[x % 2 != 0] = -1  # % is the remainder operator
+>>> x
+```
+```
+array([10, -1, 12, -1, 14, -1, 16, -1, 18, -1])
 ```
 
 # Array operations
@@ -901,3 +911,79 @@ array([[[ 0,  2,  4],
        [[12, 14, 16],
         [18, 20, 22]]])
 ```
+
+# Useful functions
+This sections summarizes some useful functions that have not been mentioned already.
+
+## Finding unique values
+A common task in many data analysis pipelines is to determine the number of unique elements in an array. The `np.unique()` function does exactly that (and more):
+
+```python
+>>> x = np.array([5, 7, 2, 5, 1, 3, 5, 5, 2, 1, 7, 7, 2, 2])
+>>> np.unique(x)
+```
+```
+array([1, 2, 3, 5, 7])
+```
+
+It is also possible to count the number of items for each unique value:
+
+```python
+>>> np.unique(x, return_counts=True)
+```
+```
+(array([1, 2, 3, 5, 7]), array([2, 4, 1, 4, 3]))
+```
+
+Used like this, the function returns a tuple, where the first element corresponds to the unique elements, and the second element contains their frequencies. In our example, we can quickly see that `1` occurs `2` times, `2` occurs `4` times, and so on.
+
+## Repeating arrays
+The `np.tile()` function creates a new array by repeating a given array a certain number of times:
+
+```python
+>>> a = np.eye(2, dtype=int)
+>>> a
+```
+```
+array([[1, 0],
+       [0, 1]])
+```
+```python
+>>> np.tile(a, 2)
+```
+```
+array([[1, 0, 1, 0],
+       [0, 1, 0, 1]])
+```
+
+```python
+>>> np.tile(a, (2, 1))
+```
+```
+array([[1, 0],
+       [0, 1],
+       [1, 0],
+       [0, 1]])
+```
+
+```python
+>>> np.tile(a, (2, 4))
+```
+```
+array([[1, 0, 1, 0, 1, 0, 1, 0],
+       [0, 1, 0, 1, 0, 1, 0, 1],
+       [1, 0, 1, 0, 1, 0, 1, 0],
+       [0, 1, 0, 1, 0, 1, 0, 1]])
+```
+
+# Additional resources
+The [official NumPy website](https://numpy.org/doc/stable/index.html) contains excellent documentation and many tutorials. I specifically recommend the following tutorials for beginners:
+
+- [The absolute basics for beginners](https://numpy.org/doc/stable/user/absolute_beginners.html)
+- [NumPy quickstart](https://numpy.org/doc/stable/user/quickstart.html)
+
+If you are coming from MATLAB, this tutorial is for you:
+
+- [NumPy for MATLAB users](https://numpy.org/doc/stable/user/numpy-for-matlab-users.html)
+
+# Exercises
