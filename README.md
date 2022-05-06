@@ -12,13 +12,13 @@ Data Analysis with Python
   - Shell mode
   - Jupyter notebook
 - [NumPy](numpy.md)
-  - The n-dimensional array
-  - Creating arrays
-  - Shape and reshape
-  - Indexing and slicing
-  - Array operations
-  - Broadcasting
-  - Sum, mean, min, max
+  - [Introduction](numpy.md#introduction)
+  - [The n-dimensional array](numpy.md#the-n-dimensional-array)
+  - [Creating arrays](numpy.md#creating-arrays)
+  - [Shape and reshape](numpy.md#shape-and-reshape)
+  - [Indexing and slicing](numpy.md#indexing-and-slicing)
+  - [Array operations](numpy.md#array-operations)
+  - [Broadcasting](numpy.md#broadcasting)
   - Applying methods to specific axes
 - pandas
   - Why another package on top of NumPy?
