@@ -11,16 +11,16 @@ Data Analysis with Python
   - Magic commands
   - Shell mode
   - Jupyter notebook
-- [NumPy](numpy.md)
-  - [Introduction](numpy.md#introduction)
-  - [The n-dimensional array](numpy.md#the-n-dimensional-array)
-  - [Creating arrays](numpy.md#creating-arrays)
-  - [Shape and reshape](numpy.md#shape-and-reshape)
-  - [Indexing and slicing](numpy.md#indexing-and-slicing)
-  - [Array operations](numpy.md#array-operations)
-  - [Broadcasting](numpy.md#broadcasting)
-  - [Useful functions](numpy.md#useful-functions)
-  - [Exercises](numpy.md#exercises)
+- [NumPy](https://rpubs.com/cbrnr/python_numpy)
+  - Introduction
+  - The n-dimensional array
+  - Creating arrays
+  - Shape and reshape
+  - Indexing and slicing
+  - Array operations
+  - Broadcasting
+  - Useful functions
+  - Exercises
 - pandas
   - Why another package on top of NumPy?
 - Matplotlib
