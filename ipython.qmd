@@ -61,7 +61,7 @@ In addition to the last result, we can also get the two previous ones with doubl
 
 Finally, all inputs and outputs are also available as `In` and `Out`. For example, the first input and output can be accessed with `In[1]` and `Out[1]`, respectively.
 
-## Useful keyboard shortcuts
+## Keyboard shortcuts
 IPython offers many useful keyboard shortcuts that can significantly speed up the interactive development workflow. The most important shortcuts are:
 
 - <kbd>↑</kbd> and <kbd>↓</kbd> go back and forward in the command history. This even works when typing a few characters and then pressing the up arrow key, which will search only those commands that start with the given characters.

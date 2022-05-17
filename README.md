@@ -9,7 +9,7 @@ Data Analysis with Python
 - [IPython](https://rpubs.com/cbrnr/python_ipython)
   - Introduction
   - First steps
-  - Useful keyboard shortcuts
+  - Keyboard shortcuts
   - Magic commands
   - Shell commands
   - Jupyter notebook
