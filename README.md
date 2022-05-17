@@ -6,10 +6,12 @@ Data Analysis with Python
   - Why Python?
   - Alternatives (R, Julia)
   - Essential packages (IPython, NumPy, pandas, Matplotlib)
-- IPython
-  - Basics (installation, starting, history, tab completion, help)
+- [IPython](https://rpubs.com/cbrnr/python_ipython)
+  - Introduction
+  - First steps
+  - Useful keyboard shortcuts
   - Magic commands
-  - Shell mode
+  - Shell commands
   - Jupyter notebook
 - [NumPy](https://rpubs.com/cbrnr/python_numpy)
   - Introduction
