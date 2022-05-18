@@ -1,0 +1,46 @@
+---
+title: "Pandas"
+subtitle: "Data wrangling essentials"
+author: "Clemens Brunner"
+date: 2022-05-17
+format: html
+toc: true
+toc-title: ""
+engine: knitr
+highlight-style: github
+title-block-banner: true
+theme:
+  light: [flatly, theme-light.scss]
+  dark: [darkly, theme-dark.scss]
+---
+
+## Introduction
+Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in most cases this is not going to work. NumPy arrays are homogenous arrays, which means that all elements must share the same type. However, tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might require floating point numbers, text (strings), or even categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1]. This is what [pandas](https://pandas.pydata.org/)[^2] offers:
+
+[^1]: NumPy supports arrays with different data types through [structured arrays](https://numpy.org/doc/stable/user/basics.rec.html), but pandas data frames are usually much easier to work with in a typical data analysis pipeline.
+
+[^2]: Note that pandas is spelled with all lower-case letters. Therefore, we will capitalize the first letter only at the beginning of a sentence in this document.
+
+## Tidy data
+
+## Data frame
+
+## Import data
+### Text files
+
+### Excel files
+
+## Data wrangling
+- Filter observations (rows)
+- Arrange (reorder) rows
+- Select variables (columns)
+- Create new variables (columns) based on existing ones
+- Aggregate data
+- Group data
+
+```{python}
+import pandas as pd
+
+flights = pd.read_csv("flights.zip")
+flights.info()
+```

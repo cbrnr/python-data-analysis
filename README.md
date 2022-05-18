@@ -24,7 +24,7 @@ Data Analysis with Python
   - Useful functions
   - Exercises
 - pandas
-  - Why another package on top of NumPy?
+  - Introduction
 - Matplotlib
 
 ---
