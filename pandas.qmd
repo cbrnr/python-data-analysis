@@ -44,3 +44,7 @@ import pandas as pd
 flights = pd.read_csv("flights.zip")
 flights.info()
 ```
+
+---
+
+© [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))

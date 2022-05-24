@@ -28,4 +28,5 @@ Data Analysis with Python
 - Matplotlib
 
 ---
+
 © [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))

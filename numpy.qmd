@@ -625,3 +625,7 @@ If you are coming from MATLAB, this tutorial is for you:
 
 ## Exercises
 -   [100 NumPy Exercises](https://github.com/rougier/numpy-100) ([Solutions](https://github.com/rougier/numpy-100/blob/master/100_Numpy_exercises_with_solutions.md))
+
+---
+
+© [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))

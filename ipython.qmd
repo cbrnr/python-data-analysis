@@ -93,3 +93,6 @@ It is often useful to run commands directly in the underlying shell. This can be
 - `!less <some_file.txt>` shows the contents of the file `<some_file.txt>`.
 - `!date` runs the `date` shell command (which displays the current time and date). Note that it is even possible to capture the output of a shell command to access it in Python later on, for example `d = !date`.
 
+---
+
+© [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))
