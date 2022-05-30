@@ -169,7 +169,9 @@ Notice the decimal points in the output; the data type is therefore:
 g.dtype
 ```
 
-Besides the standard Python data types `int` and `float`, more specific types available as `np.int32`, `np.int64`, `np.float32`, `np.float64`, and so on, are also supported. In fact, `int` and `float` map to `np.int64` and `np.float64`, respectively.
+:::{.callout-info}
+Besides the standard Python data types `int` and `float`, more specific types with a fixed size are available as `np.int32`, `np.int64`, `np.uint32`, `np.uint64`, `np.float32`, `np.float64`, and so on. In fact, on most platforms `int` and `float` map to `np.int64` and `np.float64`, respectively. See the documentation for [array scalars](https://numpy.org/doc/stable/reference/arrays.scalars.html) for more details.
+:::
 
 ### Number ranges
 The `np.arange()` function creates an array with equally-spaced numbers:
