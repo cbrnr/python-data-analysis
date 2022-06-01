@@ -455,6 +455,18 @@ Similarly, here's the average departure delay per month:
 flights.groupby(["year", "month"])["dep_delay"].agg("mean")
 ```
 
+Notice how we select the `dep_delay` column of the grouped data frame with square bracket indexing. Another option is to specify the columns that should be aggregated in the argument of the `agg()` method as follows:
+
+```{python}
+flights.groupby(["year", "month"]).agg({"dep_delay": "mean"})
+```
+
+:::{.callout-note}
+Do you see the difference in the outputs of the previous two examples? The first output is a `pd.Series`, whereas the second output is a `pd.Dataframe` with one column.
+:::
+
+### Pipelines
+
 ---
 
 © [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))
