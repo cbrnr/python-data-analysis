@@ -15,34 +15,444 @@ theme:
 ---
 
 ## Introduction
-Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in most cases this is not going to work. NumPy arrays are homogenous arrays, which means that all elements must share the same type. However, tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might require floating point numbers, text (strings), or even categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1]. This is what [pandas](https://pandas.pydata.org/)[^2] offers:
+
+Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in most cases this is not going to work. NumPy arrays are homogenous arrays, which means that all elements must have the same type. However, real-world tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might hold floating point numbers, text (strings), or even categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1].
 
 [^1]: NumPy supports arrays with different data types through [structured arrays](https://numpy.org/doc/stable/user/basics.rec.html), but pandas data frames are usually much easier to work with in a typical data analysis pipeline.
+
+[Pandas](https://pandas.pydata.org/)[^2] includes a flexible data type for tabular data which builds upon NumPy arrays, but can accomodate heterogeneous column types: the so-called *data frame*.
 
 [^2]: Note that pandas is spelled with all lower-case letters. Therefore, we will capitalize the first letter only at the beginning of a sentence in this document.
 
 ## Tidy data
 
-## Data frame
+There are many ways to organize data into rows and columns, but the [tidy data](https://www.jstatsoft.org/article/view/v059i10) format has compelling advantages. A table is tidy when
 
-## Import data
+-   each variable corresponds to exactly one column,
+-   each observation corresponds to exactly one row,
+-   and each value corresponds to exactly one cell.
+
+> "Tidy datasets are all alike, but every messy dataset is messy in its own way." -- Hadley Wickham
+
+Consider the following table (taken from the `tidyr` R package):
+
+| country     | year |  cases | population |
+|-------------|-----:|-------:|-----------:|
+| Afghanistan | 1999 |    745 |   19987071 |
+| Afghanistan | 2000 |   2666 |   20595360 |
+| Brazil      | 1999 |  37737 |  172006362 |
+| Brazil      | 2000 |  80488 |  174504898 |
+| China       | 1999 | 212258 | 1272915272 |
+| China       | 2000 | 213766 | 1280428583 |
+
+: A tidy table.
+
+This table is tidy because it meets all three criteria. It might be difficult to see why this is the case, so let's look at other tables (containing the same data) that are *not* tidy. The following table combines two variables into one column, which makes the table twice as long:
+
+| country     | year | type       |      count |
+|-------------|-----:|------------|-----------:|
+| Afghanistan | 1999 | cases      |        745 |
+| Afghanistan | 1999 | population |   19987071 |
+| Afghanistan | 2000 | cases      |       2666 |
+| Afghanistan | 2000 | population |   20595360 |
+| Brazil      | 1999 | cases      |      37737 |
+| Brazil      | 1999 | population |  172006362 |
+| Brazil      | 2000 | cases      |      80488 |
+| Brazil      | 2000 | population |  174504898 |
+| China       | 1999 | cases      |     212258 |
+| China       | 1999 | population | 1272915272 |
+| China       | 2000 | cases      |     213766 |
+| China       | 2000 | population | 1280428583 |
+
+: Variables "cases" and "population" are not in two separate columns.
+
+For the same reason, the next table is also not tidy. It contains a combination of two variables in one column. In addition, this column is not numeric, which makes it difficult to work with the actual data.
+
+| country     | year | rate              |
+|-------------|-----:|-------------------|
+| Afghanistan | 1999 | 745/19987071      |
+| Afghanistan | 2000 | 2666/20595360     |
+| Brazil      | 1999 | 37737/172006362   |
+| Brazil      | 2000 | 80488/174504898   |
+| China       | 1999 | 212258/1272915272 |
+| China       | 2000 | 213766/1280428583 |
+
+: Variables "cases" and "population" are combined in one column.
+
+In pandas, working with tidy data greatly facilitates many operations, so whenever possible this should be the preferred table format. However, depending on the task, this might not always be possible or practical, so it is completely fine if another data organization works better. We will discuss how we can transform any given messy data into a tidy representation (and back) later in this chapter.
+
+## Data frames
+
+Before we start, we import pandas as follows:
+
+```{python}
+import pandas as pd
+```
+
+We can represent tabular data with a data frame, which is available as the `pd.DataFrame` type.
+
+### Creating data frames
+#### From arrays
+Let's start with a simple example, which creates a data frame from a two-dimensional NumPy array:
+```{python}
+import numpy as np
+
+data = np.arange(1, 21).reshape((4, 5))
+pd.DataFrame(data)
+```
+
+The resulting data frame does not look very different from a NumPy array, except for row and column labels. However, keep in mind that each column could hold values with a different data type. In fact, each column is represented by a `pd.Series` object, which accomodates one-dimensional data.
+
+We can supply custom column labels when creating a data frame:
+
+```{python}
+pd.DataFrame(data, columns=["A", "B", "C", "D", "E"])
+```
+
+Similarly, we could also set custom row labels with the `index` argument. However, this is rarely needed since consecutively numbered rows are fine for most use cases (note that the row labels start with zero).
+
+#### Column-wise
+Another way to generate a data frame is to pass a dictionary, where each key corresponds to a column label and the corresponding value is a sequence-like object containing the column elements:
+
+```{python}
+pd.DataFrame({"A": [1., 2, 3, 4], "B": ["w", "x", "y", "z"], "C": np.arange(4)})
+```
+
+In this example, each column has a different data type. The first column is coerced to float, the second column contains strings, and the third column holds integers.
+
+:::{.callout-note}
+The first element in the list `[1., 2, 3, 4]` is a float. Since all elements within a column must have the same type, all other values in column `A` are converted to float as well.
+:::
+
+#### Row-wise
+Sometimes, we might want to create a data frame row by row. We can use `pd.DataFrame.from_dict()` in combination with `orient="index"` for this:
+
+```{python}
+pd.DataFrame.from_dict({1: [1, "a", 3, 5.], 2: [2, "b", 4, 6.]}, orient="index")
+```
+
+Notice that the dictionary keys are used for the row labels this time.
+
+### Viewing data frames
+Every data frame has useful attributes and methods that we can use to inspect it in more detail. Let's start with one of the example data frames we saw previously:
+
+```{python}
+df = pd.DataFrame(
+    {"A": [1., 2, 3, 4], "B": ["w", "x", "y", "z"], "C": np.arange(4)}
+)
+df
+```
+
+We can access the row and column names with the `index` and `columns` attributes, respectively:
+
+```{python}
+df.index
+df.columns
+```
+
+One of the most useful methods is `info()`, which displays essential information such as the data type for each column:
+
+```{python}
+df.info()
+```
+
+In our example, we see that `df` consists of four rows and three columns. For each column, the label, number of non-missing (non-null) values, and data type are listed. Column A contains `float64` values (double precision floating point numbers), column B contains strings (listed as `object`), and column C contains `int64` integers.
+
+:::{.callout-note}
+By default, pandas uses the `object` data type to represent strings. Newer versions also support a dedicated `string` type (which has several advantages).
+:::
+
+Obviously, typing `df` in the interactive interpreter prints the data frame:
+
+```{python}
+df
+```
+
+When the data frame has many rows and/or columns, the output only shows the first and last few rows and columns:
+
+```{python}
+import string  # needed to create a list of the 26 letters
+
+df = pd.DataFrame(
+    np.random.randint(-100, 100, (1000, 26)),
+    columns=list(string.ascii_uppercase)  # custom column labels
+)
+df
+```
+
+We can change this behavior by setting the following two options to appropriate values (`None` means unlimited, `0` uses the defaults):
+
+```{python}
+#| eval: false
+pd.set_option("display.max_rows", None)  # print all rows
+pd.set_option("display.max_columns", None)  # print all columns
+```
+
+This changes the display options globally, so from now on all data frames will use these settings. Often, we want to change these settings only for a particular data frame. We can use a context manager for this purpose:
+
+```{python}
+with pd.option_context("display.max_rows", 4, "display.max_columns", 4):
+    df
+```
+
+The display options are then only valid within the context manager (the indented block of code).
+
+Another way to inspect the first or last rows of a data frame is available with the `head()` and `tail()` methods, respectively:
+
+```{python}
+df.head()  # first 5 rows
+df.tail()  # last 5 rows
+df.head(10)  # first 10 rows
+```
+
+Finally, we can generate basic summary statistics for each column, which is especially useful for numeric columns:
+
+```{python}
+df.describe()
+```
+
+We can round the values in this table to fit more columns on the screen:
+
+```{python}
+df.describe().round(2)  # rounded to two decimal places
+```
+
+### Common data types
+A pandas data frame consists of one or more columns, and each column is represented by a `pd.Series` object (a one-dimensional sequence-like container). Each series has a data type, most of which are based on [NumPy array scalar types](https://numpy.org/doc/stable/reference/arrays.scalars.html). The most common numerical data types are:
+
+- Integers: `int8`, `int16`, `int32`, and `int64`
+- Unsigned integers: `uint8`, `uint16`, `uint32`, and `uint64`
+- Floating point numbers: `float16`, `float32`, `float64`, and `float128`
+- Complex numbers: `complex64`, `complex128`, and `complex256`
+
+The shorthand notations `int`, `uint`, `float`, and `complex` map to `int64`, `uint64`, `float64`, and `complex128` on most machines, respectively. These type specifications need to be passed as a string when used as the `dtype` argument:
+
+```{python}
+pd.Series([1, 2, 3], dtype="int")
+pd.Series([1, 2, 3], dtype="uint8")
+pd.Series([1, 2, 3], dtype="float32")
+pd.Series([1, 2, 3], dtype="complex256")
+```
+
+Strings are stored as `object` series by default (`object` is the base type in Python which every other type derives from – so everything is an `object`).
+
+```{python}
+pd.Series(["a", "b", "c"])
+```
+
+Finally, boolean series are also supported:
+
+```{python}
+pd.Series([True, True, False])
+```
+
+Besides these NumPy-based data types, pandas also features so-called extension data types. Currently, the most important extension data types are:
+
+- `category` for categorical data
+- `Int8`, `Int16`, `Int32`, `Int64`, `UInt8`, `UInt16`, `UInt32`, and `UInt64` for integer types with support for missing values (note the capital initial letters)
+- `string` for string data
+- `boolean` for boolean data with support for missing values (note that this is different from the NumPy-based `bool` data type)
+
+```{python}
+pd.Series(["a", "b", "c"], dtype="category")
+pd.Series([1, 2, 3], dtype="Int64")
+pd.Series(["a", "b", "c"], dtype="string")
+pd.Series([True, True, False], dtype="boolean")
+```
+
+In general, it is recommended to use these extension data types because they perform as well as the NumPy-based types, but offer better support for missing values or other functionality.
+
+### Missing data
+Almost any real-word data contains missing data points. Pandas encodes missing numeric values as `NaN` ("Not a Number"), a special value defined in the [IEEE 754 floating point standard](https://en.wikipedia.org/wiki/IEEE_754). Therefore, this missing value only exists for floating point data, and integer series are converted to float if they contain missing values. Datetime types have a special `NaT` ("Not a Time") value to represent missing dates. Strings and boolean types sometimes use `None` for missing values. In summary, missing data is represented with various different values depending on the underlying data type.
+
+Recently, pandas has started to unify missing data support with the native `NA` ("Not Available") value (available as `pd.NA`). Future versions of pandas will likely support `NA` for all data types, but right now we have to live with the variety of different missing value representations (which of course are all handled correctly by pandas).
+
+To illustrate these ideas, let's create a data frame with some missing values:
+
+```{python}
+df = pd.DataFrame(
+    {"A": [1, None, 3], "B": [1., 2., None], "C": [True, False, None]}
+)
+df
+df.dtypes
+```
+
+Notice that the first column is coerced to `float64` because it contains a missing value (otherwise, it would be `int64`). In both numerical columns, missing values are represented as `NaN`, whereas the last column is interpreted as a string (`object`) column because of the `None` element.
+
+Luckily, it is easy to check which values are missing in a data frame with the `isna()` method:
+
+```{python}
+df.isna()
+```
+
+Most extension data types support the native `NA` value, which is shown as `<NA>`:
+
+```{python}
+df = pd.DataFrame(
+    {
+        "A": pd.Series([1, pd.NA, 2], dtype="Int64"),
+        "B": pd.Series([True, False, pd.NA], dtype="boolean"),
+        "C": pd.Series([pd.NA, "b", "c"], dtype="string")
+    }
+)
+df
+df.dtypes
+df.isna()
+```
+
+### Indexing
+
+```{python}
+df["B"]
+df[["A", "C"]]
+# df.loc[]
+# df.iloc[]
+```
+
+
+
+## Importing data
+Pandas supports importing data from a multitude of different formats. In this section, we will showcase how to import the most common data formats. In almost all cases, a successfully imported file will be available as a data frame.
+
 ### Text files
+Text files are a popular option for storing data. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of tweaking parameters, because there is no universal standard on how to format text files (for example, files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice with very large data sets.
+
+The function [`pd.read_csv()`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) ...
+
+Other useful functions for reading text data include `pd.read_fwf()`, `pd.read_json()`, and `pd.read_xml()`.
 
 ### Excel files
+Like it or not, Excel is still a popular tool for analyzing (small) data sets. It is also common as a data storage format (`.xlsx`). Pandas can import Excel sheets with `pd.read_excel()` (which also supports the OpenDocument format `.ods` used by LibreOffice).
+
+### SPSS/Stata/SAS files
 
 ## Data wrangling
-- Filter observations (rows)
-- Arrange (reorder) rows
-- Select variables (columns)
-- Create new variables (columns) based on existing ones
-- Aggregate data
-- Group data
+
+-   Filtering observations (rows)
+-   Arranging (reorder) rows
+-   Selecting variables (columns)
+-   Creating new variables (columns) based on existing ones
+-   Summarizing data
+-   Grouping data
 
 ```{python}
 import pandas as pd
 
-flights = pd.read_csv("flights.zip")
-flights.info()
+flights = pd.read_csv(
+    "flights.zip",
+    dtype={
+        "dep_time": "Int64",
+        "dep_delay": "Int64",
+        "arr_time": "Int64",
+        "arr_delay": "Int64",
+        "air_time": "Int64",
+        "carrier": "string",
+        "tailnum": "string",
+        "origin": "string",
+        "dest": "string"
+    },
+    parse_dates=["time_hour"]
+)
+```
+
+Notice that in order to get better support for missing values, we specificy the data types for integer and string columns manually to one of the extension types `Int64` and `string`, respectively. We also tell the function to parse the `time_hour` column as a datetime.
+
+### Filtering observations
+
+```{python}
+flights.query("month == 1 and day == 1")
+flights.query("month == 11 or month == 12")
+flights.query("air_time < 25")
+flights.query("arr_delay < dep_delay")
+```
+
+### Arranging rows
+
+```{python}
+flights.sort_values(["year", "month", "day", "sched_dep_time"])
+flights.sort_values("dep_delay", ascending=False)
+```
+
+Note that missing values will always be sorted at the end.
+
+### Selecting variables
+
+```{python}
+flights.filter(["year", "month", "day"])
+flights.filter(regex="delay")
+flights.filter(regex="arr_")
+flights.filter(regex="^a")
+flights.filter(regex="time$")
+```
+
+### Creating new variables
+First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns we will add in this section.
+
+```{python}
+df = flights.filter(
+    ["year", "month", "day", "dep_delay", "arr_delay", "distance", "air_time"]
+)
+```
+
+```{python}
+df.assign(
+    gain=df["arr_delay"] - df["dep_delay"],
+    hours=df["air_time"] / 60,
+    speed=lambda x: x["distance"] / x["hours"]
+)
+```
+
+### Summarizing data
+Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use its `agg()` method to summarize its values with a given aggregation function. An aggregation function returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
+
+Here's an example which summarizes the `dep_delay` column by its mean:
+
+```{python}
+flights["dep_delay"].agg("mean")
+```
+
+We could also select the column with the `filter()` method we saw before:
+
+```{python}
+flights.filter(["dep_delay"]).agg("mean")
+```
+
+Missing values are automatically removed before `agg()` calculates the summary statistic.
+
+:::{.callout-note}
+The first example `flights["dep_delay"].agg("mean")` returns a scalar, whereas the second example `flights.filter(["dep_delay"]).agg("mean")` returns the value inside a `pd.Series`. The reason for this difference is that the `filter()` method always returns a data frame, even if it consists of only one column. Indexing with square bracket notation returns a `pd.Series` if we are asking for only one column.
+:::
+
+We can even compute several summary statistics simulteneously by passing a list of aggregation functions:
+
+```{python}
+flights.filter(["dep_delay"]).agg(["mean", "std", "min", "max"])
+```
+
+The most important aggregation functions are available as strings (as in the previous example), but in general we can pass an arbitrary function which takes a sequence-like object and returns a single value. For example, we could write the previous mean aggregation as:
+
+```{python}
+flights["dep_delay"].agg(np.mean)
+```
+
+We could also provide our own function:
+
+```{python}
+flights["dep_delay"].agg(lambda x: sum(x.dropna()) / len(x.dropna()))
+```
+
+For even moderately complex functions, lambda functions tend to get unreadable, so you should prefer a regular (named) function instead.
+
+Things get more interesting when we group the data first and aggregate within each group individually. The `groupby()` data frame method groups the data into groups based on one or more columns. For example, we can group by year, month, and day to calculate the mean departure delay on each single day:
+
+```{python}
+flights.groupby(["year", "month", "day"])["dep_delay"].agg("mean")
+```
+
+Similarly, here's the average departure delay per month:
+
+```{python}
+flights.groupby(["year", "month"])["dep_delay"].agg("mean")
 ```
 
 ---
