@@ -391,7 +391,30 @@ Other useful functions for reading text data include `pd.read_clipboard()`, `pd.
 ### Excel files
 Like it or not, Excel is still a popular tool for analyzing (small) data sets. It is also common as a data storage format (`.xlsx`). Pandas can import Excel sheets with `pd.read_excel()` (which also supports the OpenDocument format `.ods` used by LibreOffice).
 
+:::{.callout-important}
+To import Excel files with pandas, you need to install the following packages depending on the file format:
+
+- `openpyxl` for modern Excel files (.xlsx)
+- `xlrd` for older Excel files (.xls)
+- `odfpy` for OpenDocument files (.ods)
+
+It is generally a good idea to install all three dependencies if you are planning to work with Excel files.
+:::
+
+Let's import data from an Excel file named `data.xlsx` (located in the current working directory), which contains the same table we saw in the previous section:
+
+```{python}
+pd.read_excel("data.xlsx")
+```
+
+We can use many of the arguments we already know from `pd.read_csv()` (such as `header` and `dtype`). In addition, Excel files can contain multiple sheets. To specify which sheet you want to import, use the `sheet_name` parameter. For more information on all available parameters, consult the [`pd.read_excel()` reference](https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html).
+
 ### SPSS/Stata/SAS files
+Similar to Excel files, pandas can import data stored in SPSS, Stata, and SAS files with dedicated reader functions [`pd.read_spss()`](https://pandas.pydata.org/docs/reference/api/pandas.read_spss.html), [`pd.read_stata()`](https://pandas.pydata.org/docs/reference/api/pandas.read_stata.html), and [`pd.read_sas()`](https://pandas.pydata.org/docs/reference/api/pandas.read_sas.html).
+
+:::{.callout-important}
+Reading SPSS, Stata, and SAS files requires the `pyreadstat` package.
+:::
 
 ## Data wrangling
 
