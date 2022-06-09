@@ -573,14 +573,37 @@ flights.sort_values("dep_delay", ascending=False)["dep_delay"]
 1301 minutes are almost 22 hours! That's a long delay for sure!
 
 ### Selecting variables
+Next, we will learn how to select specific columns with the `filter()` method. Let's start with a basic example, where we pick two columns passed as a list of column labels:
 
 ```{python}
 flights.filter(["month", "day"])
+```
+
+We can also pick columns with [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) (using the `regex` argument). For example, we can pick all columns containing `delay` as follows:
+
+```{python}
 flights.filter(regex="delay")
+```
+
+Or what about columns that contain the string `arr_`?
+
+```{python}
 flights.filter(regex="arr_")
+```
+
+The next example selects all columns starting with `a`:
+
+```{python}
 flights.filter(regex="^a")
+```
+
+Finally, we pick all columns ending with `time`:
+
+```{python}
 flights.filter(regex="time$")
 ```
+
+Regular expressions are a powerful way to describe text patterns. We do not have time to go into any more details, but it pays off to learn at least the basic concepts (for example with [this interactive tutorial](https://regexone.com/))!
 
 ### Creating new variables
 First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns we will add in this section.
