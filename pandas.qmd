@@ -547,6 +547,22 @@ flights[flights["air_time"] < 25]
 However, in most cases this is more verbose than `query()`, especially when combining several conditions.
 :::
 
+Filtering rows implicitly drops missing values that are present in the column(s) of interest. To explicitly drop missing values, we can use the `dropna()` method. The following command drops all rows containing a missing value in any column:
+
+```{python}
+flights.dropna()
+```
+
+If we only want to drop rows with missing values in one (or more) specific columns, we can use the `subset` argument. Here's how to drop all rows that have missing values in the `air_time` column:
+
+```{python}
+flights.dropna(subset="air_time")
+```
+
+:::{.callout-note}
+The `dropna()` method does *not* modify the original data frame by default (instead, it returns a new data frame). This can be changed by setting `inplace=True`.
+:::
+
 ### Arranging rows
 Another frequently used operation is sorting rows in a data frame according to values in one or more columns. The `sort_values()` method accomplishes this task, by default is arranges rows in ascending order. We can use this method to sort all flights from first to last scheduled departure time within the entire year as follows:
 
@@ -603,16 +619,18 @@ Finally, we pick all columns ending with `time`:
 flights.filter(regex="time$")
 ```
 
-Regular expressions are a powerful way to describe text patterns. We do not have time to go into any more details, but it pays off to learn at least the basic concepts (for example with [this interactive tutorial](https://regexone.com/))!
+Regular expressions are a powerful way to describe text patterns. We do not have time to go into any more details, but it pays off to learn at least the basic concepts (for example with [this tutorial](https://regexone.com/)).
 
 ### Creating new variables
 First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns we will add in this section.
 
 ```{python}
-df = flights.filter(
-    ["month", "day", "dep_delay", "arr_delay", "distance", "air_time"]
-)
+df = flights.filter(["dep_delay", "arr_delay", "distance", "air_time"])
 ```
+
+Now imagine we wanted to add a new column containing the gained time of each flight, which can be computed as the difference between arrival delay and departure delay. If the gain is positive, the airplane was faster than planned and therefore gained time.
+
+Pandas offers the `assign()` method to compute new columns. Let's add a `gain` column we just discussed, and in addition let's also compute the average speed of each flight (in kilometers per hour) using the existing `air_time` and `distance` columns:
 
 ```{python}
 df.assign(
@@ -621,6 +639,8 @@ df.assign(
     speed=lambda x: x["distance"] / x["hours"]
 )
 ```
+
+Notice that we can use columns that we just created to create a new variable like `speed`, where we use the `hours` column which we created in the previous line (but in the same method call). We do have to use a lambda function though, because `df["hours"]` does not exist in the original data frame yet.
 
 ### Summarizing data
 Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use its `agg()` method to summarize its values with a given aggregation function. An aggregation function returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
