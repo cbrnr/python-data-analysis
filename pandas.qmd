@@ -640,10 +640,10 @@ df.assign(
 )
 ```
 
-Notice that we can use columns that we just created to create a new variable like `speed`, where we use the `hours` column which we created in the previous line (but in the same method call). We do have to use a lambda function though, because `df["hours"]` does not exist in the original data frame yet.
+Notice that we can use columns that we just created to create another new variable like `speed`, where we use the `hours` column which we created in the previous line (but in the same method call). We do have to use a lambda function though, because `df["hours"]` does not exist in the original data frame.
 
 ### Summarizing data
-Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use its `agg()` method to summarize its values with a given aggregation function. An aggregation function returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
+Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use the `agg()` method to summarize its values with a given aggregation function. An aggregation function can be any function which returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
 
 Here's an example which summarizes the `dep_delay` column by its mean:
 
@@ -663,7 +663,7 @@ Missing values are automatically removed before `agg()` calculates the summary s
 The first example `flights["dep_delay"].agg("mean")` returns a scalar, whereas the second example `flights.filter(["dep_delay"]).agg("mean")` returns the value inside a `pd.Series`. The reason for this difference is that the `filter()` method always returns a data frame, even if it consists of only one column. Indexing with square bracket notation returns a `pd.Series` if we are asking for only one column.
 :::
 
-We can even compute several summary statistics simulteneously by passing a list of aggregation functions:
+We can even compute several summary statistics simulteneously by passing a list of functions:
 
 ```{python}
 flights.filter(["dep_delay"]).agg(["mean", "std", "min", "max"])
@@ -683,7 +683,7 @@ flights["dep_delay"].agg(lambda x: sum(x.dropna()) / len(x.dropna()))
 
 For even moderately complex functions, lambda functions tend to get unreadable, so you should prefer a regular (named) function instead.
 
-Things get more interesting when we group the data first and aggregate within each group individually. The `groupby()` data frame method groups the data into groups based on one or more columns. For example, we can group by year, month, and day to calculate the mean departure delay on each single day:
+Things get more interesting when we group the data first and aggregate within each group individually. The `groupby()` data frame method groups the data into groups based on one or more columns. For example, we can group by month and day to calculate the mean departure delay on each single day:
 
 ```{python}
 flights.groupby(["month", "day"])["dep_delay"].agg("mean")
@@ -717,7 +717,7 @@ In contrast, the number of missing values in that column can be obtained with:
 flights.groupby("month")["dep_delay"].agg(lambda x: x.isna().sum())
 ```
 
-The `value_counts()` method determines the number of occurrences for each unique value in a column. For example, an individual airplane is identified by its tail number (contained in the `tailnum` column). If we want to know how many unique airplanes are in the data set, and how many flights each individual airplane had, we can use the following command:
+The `value_counts()` method determines the number of occurrences for each unique value in a column. For example, an individual airplane is identified by its tail number. If we want to know how many unique airplanes there are in the data set, and how many flights each individual airplane had, we can use the following command:
 
 ```{python}
 flights["tailnum"].value_counts()
@@ -729,7 +729,7 @@ This output shows that there are 4043 unique airplanes, each of which is listed 
 flights["tailnum"].value_counts().head(10)
 ```
 
-How many planes have just one flight?
+How many airplanes have just one flight?
 
 ```{python}
 (flights["tailnum"].value_counts() == 1).sum()
