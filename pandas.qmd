@@ -506,14 +506,14 @@ flights.drop(columns=["year", "hour", "minute", "time_hour"], inplace=True)
 flights.info()
 ```
 
-Notice that in order to get better support for missing values, we specificy the data types for integer and string columns manually as one of the extension types `Int64` and `string`, respectively. We also drop the `year`, `hour`, `minute`, and `time_hour` columns because we won't need them in our analyses (and they contain only redundant information anyway).
+Notice that in order to get better support for missing values, we specify the data types for integer and string columns manually as one of the extension types `Int64` and `string`, respectively. We also drop the `year`, `hour`, `minute`, and `time_hour` columns because we won't need them in our analyses (and they contain only redundant information anyway).
 
 The `nycflights13` data set contains data on all 336,776 flights departing from New York City airports ([JFK](https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport), [LGA](https://en.wikipedia.org/wiki/LaGuardia_Airport), and [EWR](https://en.wikipedia.org/wiki/Newark_Liberty_International_Airport)) in 2013. Let's see what we can find out about that data set.
 
 ### Filtering observations
 First, we might want to know how many flights departed on New Year's Day 2013. Each flight is represented by a row, so we need to filter rows with flights that departed on January 1 (columns `month` and `day` contain the dates).
 
-The `query()` method filters rows according to a specified condition based on values in one or more columns. The query must be passed as a single string. It returns a new data frame containing only the filtered rows, which in our example consists of 842 rows:
+The `query()` method filters rows according to a specified condition based on values in one or more columns. The query must be passed as a single string, which may contain column names without having to use any special indexing syntax. The query returns a new data frame containing only the filtered rows, which in our example consists of 842 rows:
 
 ```{python}
 flights.query("month == 1 and day == 1")
@@ -735,12 +735,41 @@ How many airplanes have just one flight?
 (flights["tailnum"].value_counts() == 1).sum()
 ```
 
+Here, we exploited the fact that summing a boolean series counts `True` as 1 and `False` as 0.
 
 ### Pipelines
+Almost all interesting data wrangling tasks require a combination of the five previously mentioned basic operations. You might have already noticed this in some examples where we first picked a subset of columns and then performed some operations (like adding new variables). Usually, this requires multiple steps involving temporary names, for example:
 
+```{python}
+df1 = flights.filter(["dep_delay", "arr_delay", "distance", "air_time"])
+df2 = df1.assign(
+    gain=df["arr_delay"] - df["dep_delay"],
+    hours=df["air_time"] / 60,
+    speed=lambda x: x["distance"] / x["hours"]
+)
+df2.sort_values("speed")
+```
+
+The problem here is that we do not really need the names `df1` and `df2` other than to perform the desired operations sequentially. Luckily, we can use a so-called pipeline to combine two or more operations without the need to create temporary names:
+
+```{python}
+(flights
+    .filter(["dep_delay", "arr_delay", "distance", "air_time"])
+    .assign(
+        gain=df["arr_delay"] - df["dep_delay"],
+        hours=df["air_time"] / 60,
+        speed=lambda x: x["distance"] / x["hours"]
+    )
+    .sort_values("speed", ascending=False)
+)
+```
+
+:::{.callout-important}
+Breaking up a pipeline into multiple rows (as shown in the previous example) creates a nicely formatted representation of what happens step by step. However, this requires enclosing the entire pipleline in parentheses.
+:::
 
 ## Tidy data
-There are many ways to organize data into rows and columns, but the [tidy data](https://www.jstatsoft.org/article/view/v059i10) format has compelling advantages. A table is tidy when
+There are many ways to organize data into rows and columns, but the [tidy data](https://www.jstatsoft.org/article/view/v059i10) format has some compelling advantages. A table is tidy when
 
 -   each variable corresponds to exactly one column,
 -   each observation corresponds to exactly one row,
@@ -793,9 +822,187 @@ For the same reason, the next table is also not tidy. It contains a combination 
 
 : Variables "cases" and "population" are combined in one column. {#tbl-messy-2}
 
-In pandas, working with tidy data greatly facilitates many operations, so whenever possible this should be the preferred table format. However, depending on the task, this might not always be possible or practical, so it is completely fine if another data organization works better. We will discuss how we can transform any given messy data into a tidy representation (and back) later in this chapter.
+In pandas, working with tidy data greatly facilitates many operations, so whenever possible this should be the preferred table format. However, depending on the task, this might not always be possible or practical, so it is completely fine if another data organization works better.
+
+Pandas makes it pretty straightforward to convert any given table into a tidy format (or vice versa). Each data frame has a `pivot()` method for this task. Let's start with data from @tbl-messy-1 and use `pivot()` to make it tidy:
+
+```{python}
+messy1 = pd.read_csv(StringIO("""country,year,type,count
+Afghanistan,1999,cases,745
+Afghanistan,1999,population,19987071
+Afghanistan,2000,cases,2666
+Afghanistan,2000,population,20595360
+Brazil,1999,cases,37737
+Brazil,1999,population,172006362
+Brazil,2000,cases,80488
+Brazil,2000,population,174504898
+China,1999,cases,212258
+China,1999,population,1272915272
+China,2000,cases,213766
+China,2000,population,1280428583"""))
+```
+
+The `index` argument specifies which columns should be moved to new rows (the index), whereas the `columns` argument specifies which columns should be split up into new columns. Finally, the (optional) `values` argument lists the columns containing the values of the new data frame:
+
+```{python}
+messy1.pivot(index=["country", "year"], columns="type", values="count")
+```
+
+This result is a data frame consisting of two columns `cases` and `population` and an index consisting of `country` and `year` (a so-called multiindex). We can convert a multiindex into separate columns using the `reset_index()` method (which resets the index to the default integer series starting at zero):
+
+```{python}
+(messy1
+    .pivot(index=["country", "year"], columns="type", values="count")
+    .reset_index()
+)
+```
+
+The `type` in the output is the name of the columns (which is usually empty). If this bothers you, the column name attribute can be set to `None` (but we cannot do this inside a pipeline):
+
+```{python}
+tidy1 = (messy1
+    .pivot(index=["country", "year"], columns="type", values="count")
+    .reset_index()
+)
+tidy1.columns.name = None
+tidy1
+```
+
+Let's try to tidy the data from @tbl-messy-2:
+
+```{python}
+messy2 = pd.read_csv(StringIO("""country,year,rate
+Afghanistan,1999,745/19987071
+Afghanistan,2000,2666/20595360
+Brazil,1999,37737/172006362
+Brazil,2000,80488/174504898
+China,1999,212258/1272915272
+China,2000,213766/1280428583"""))
+```
+
+The problem here is that two variables are combined into one column `rate`, which is of type `object`:
+
+```{python}
+messy2.info()
+```
+
+String columns offer a lot of useful methods such as slicing or splitting using the `str` method namespace. In our example, we would like to split the column on the `/` character, resulting in two new columns:
+
+```{python}
+messy2["rate"].str.split("/", expand=True)
+```
+
+Note that this operation creates a new data frame because we set `expand=True` (by default, `expand=False` creates a series). We can add this resulting data frame to our tidy result:
+
+```{python}
+tidy2 = messy2.loc[:, ["country", "year"]]
+tidy2[["count", "population"]] = messy2["rate"].str.split("/", expand=True)
+```
+
+Now we are almost done, the data frame is tidy, but the columns types of `count` and `population` are still not numeric (they are `object` just like the original column). We need to explicitly convert them, for example with `pd.to_numeric()`:
+
+```{python}
+tidy2["count"] = pd.to_numeric(tidy2["count"])
+tidy2["population"] = pd.to_numeric(tidy2["population"])
+tidy2
+```
 
 ## COVID-19 example
+Let's apply some of the things we learned in this chapter to a real-world data set: official Covid-19 cases in Austria. The data is available as a text file at https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv (updated daily), and a snapshot from June 15 2022 (renamed to `covid19.csv`) is located in the current working directory.
+
+Using `pd.read_csv()`, we can import this file as follows:
+
+```{python}
+covid19 = pd.read_csv(
+    "covid19.csv",
+    sep=";",
+    decimal=",",
+    parse_dates=["Time"],
+    dayfirst=True
+)
+```
+
+The file uses semicolons (`;`) to separate columns and commas (`,`) for decimal numbers, which we need to specify in order to correctly import the data. Passing `parse_dates=["Time"]` together with `dayfirst=True` makes sure that the `Time` column has the suitable datetime data type. If you are wondering where this information is available – the only way to find out for sure is to open the file in a text editor and inspect the values!
+
+:::{.callout-note}
+If we do not specify `decimal=","`, pandas expects a point (`.`) as the decimal separator. If we then import a column with a different decimal separator, it will be interpreted as type `object`. Therefore, it is important to carefully check all column types after importing (and verify that numeric columns have numeric types).
+:::
+
+There are 8410 rows and 12 columns with no missing values, and the column data types have been inferred correctly (the first column is a datetime, and all remaining columns are numeric except for `Bundesland`, which contains the names of the Austrian provinces):
+
+```{python}
+covid19.info()
+```
+
+There are many interesting questions we could try to answer with this data set. Let's highlight a few simple ones that each introduce a new feature that we have not seen before.
+
+First, because Covid-19 infections heavily depend on the seasibs, we could be interested in average daily new cases per month. A datetime series exposes specialized method in its `dt` method namespace. Here, we use `dt.month` to extract the month of the year (1–12) and add this information as a new column `month`. Then we group by `month` and compute the average in each group:
+
+```{python}
+(covid19
+    .assign(month=covid19["Time"].dt.month)
+    .groupby("month")
+    .agg({"AnzahlFaelle": "mean"})
+)
+```
+
+Similarly, we know that new cases also depend on the day of the week, because fewer tests are administered on the weekend. Therefore, the average cases aggregated per weekday are (0–6 correspond to Monday–Sunday):
+
+```{python}
+(covid19
+    .assign(weekday=covid19["Time"].dt.weekday)
+    .groupby("weekday")
+    .agg({"AnzahlFaelle": "mean"})
+)
+```
+
+We can also create plots directly from dataframes and/or single columns. That way, we can recreate the famous time course of daily Covid-19 infections over the whole time period. We will plot the daily values for Austria with "Time" on the *x*-axis and new cases on the *y*-axis:
+
+```{python}
+#| eval: false
+(covid19
+    .query("Bundesland == 'Österreich'")
+    .set_index("Time")
+    ["AnzahlFaelle"]
+    .plot()
+)
+```
+
+```{python}
+#| echo: false
+#| classes: dark-mode
+import matplotlib.pyplot as plt
+plt.style.use("dark_background")
+ax = (covid19
+    .query("Bundesland == 'Österreich'")
+    .set_index("Time")
+    ["AnzahlFaelle"]
+    .plot()
+)
+fig = ax.get_figure()
+fig.set_tight_layout(True)
+fig.patch.set_alpha(0)
+plt.show()
+```
+
+```{python}
+#| echo: false
+#| classes: light-mode
+import matplotlib.pyplot as plt
+plt.style.use("default")
+ax = (covid19
+    .query("Bundesland == 'Österreich'")
+    .set_index("Time")
+    ["AnzahlFaelle"]
+    .plot()
+)
+fig = ax.get_figure()
+fig.set_tight_layout(True)
+fig.patch.set_alpha(0)
+plt.show()
+```
+
+Note that when we plot a single column, the index will be displayed on the *x*-axis. That's why we explicitly set the index to the `Time` column (which means that the time column gets "promoted" to the index). After that, we pick the column of interest and call its `plot()` method to generate the visualization.
 
 ---
 
