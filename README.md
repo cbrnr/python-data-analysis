@@ -22,9 +22,16 @@ Data Analysis with Python
   - Array operations
   - Broadcasting
   - Useful functions
+  - Additional resources
   - Exercises
-- pandas
+- [Pandas](https://rpubs.com/cbrnr/python_pandas)
   - Introduction
+  - Series
+  - Data frames
+  - Importing data
+  - Data wrangling
+  - Tidy data
+  - COVID-19 example
 - Matplotlib
 
 ---
