@@ -93,6 +93,13 @@ It is often useful to run commands directly in the underlying shell. This can be
 - `!less <some_file.txt>` shows the contents of the file `<some_file.txt>`.
 - `!date` runs the `date` shell command (which displays the current time and date). Note that it is even possible to capture the output of a shell command to access it in Python later on, for example `d = !date`.
 
+## Jupyter notebooks
+IPython includes support for web-based documents for [literate programming](https://en.wikipedia.org/wiki/Literate_programming), so-called [Jupyter](https://jupyter.org/) notebooks. They combine [Markdown](https://daringfireball.net/projects/markdown/) text with code cells, which is useful for exploratory data analysis, tutorials, lecture notes, and so on. However, they are not great for reproducible research (unless the whole notebook is rendered from top to bottom and all results are computed from scratch).
+
+[Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more.
+
+We will not cover any of these notebook-like tools in this course, but it is good to know that they exist (so you know where to start). By the way, the course material is written with Quarto, and if you are interested you can take a look at the source to find out how it works.
+
 ---
 
 © [Clemens Brunner](https://cbrnr.github.io/) ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/))

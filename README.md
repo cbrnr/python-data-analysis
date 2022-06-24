@@ -12,7 +12,7 @@ Data Analysis with Python
   - Keyboard shortcuts
   - Magic commands
   - Shell commands
-  - Jupyter notebook
+  - Jupyter notebooks
 - [NumPy](https://rpubs.com/cbrnr/python_numpy)
   - Introduction
   - The n-dimensional array
