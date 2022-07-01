@@ -68,7 +68,7 @@ Voilà! We added 1 to each element in the array by just typing `x + 1` -- no lis
 
 Of course, we need to import NumPy before we can use it. By convention, this is done by `import numpy as np`.
 
-The core of NumPy is the n-dimensional homogeneous array (or short ndarray or just array). This data type is a highly efficient container for homogeneous data, which means that all elements must be of the same type (typically, elements are numeric types such as integers or floats). The data is also structured into dimensions (also called axes), so an array can be one-dimensional, two-dimensional, three-dimensional, and so on (n-dimensional in general).
+The core of NumPy is the *n*-dimensional homogeneous array (or short ndarray or just array). This data type is a highly efficient container for homogeneous data, which means that all elements must be of the same type (typically, elements are numeric types such as integers or floats). The data is also structured into dimensions (also called axes), so an array can be one-dimensional, two-dimensional, three-dimensional, and so on (*n*-dimensional in general).
 
 Let's take a look at our array `x` that we have just created:
 
@@ -96,7 +96,7 @@ In addition to `dtype` and `shape`, the following attributes are also available:
 
 -   `ndim` contains the number of dimensions (axes) (this is equal to the length of the `shape` tuple)
 -   `size` contains the total number of elements in the array (this is equal to the product of the individual `shape` elements)
--   `itemsize` contains the size of one element in bytes (this is normally apparent from the `dtype`, for example `np.float64` means that one element occupies 64 bits, which corresponds to 8 bytes)
+-   `itemsize` contains the size of one element in bytes (this is normally apparent from the `dtype`, for example `int64` means that one element occupies 64 bits, which corresponds to 8 bytes)
 
 These are the attributes for our example array `x`:
 
@@ -128,7 +128,7 @@ This array consists of five rows and two columns, as can be verified by inspecti
 y.shape
 ```
 
-In other words, the first dimension contains five elements, and the second dimension contains two elements. In any n-dimensional array, the last dimension can be interpreted as columns, and the second last dimension corresponds to rows. More deeply nested lists are mapped to additional dimensions, so here's how to create a three-dimensional array:
+In other words, the first dimension contains five elements, and the second dimension contains two elements. In any *n*-dimensional array, the last dimension can be interpreted as columns, and the second last dimension corresponds to rows. More deeply nested lists are mapped to additional dimensions, so here's how to create a three-dimensional array:
 
 ```{python}
 z = np.array([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]])
@@ -156,7 +156,7 @@ f = np.array([[1.1, 5.2, -8.3], [-4.4, 15.5, 9.6]])
 f.dtype
 ```
 
-We can even specify the desired data type:
+We can even specify the desired data type explicitly:
 
 ```{python}
 g = np.array([1, 2, 3], dtype=float)
@@ -231,6 +231,8 @@ Next, let's create a logarithmically-spaced array with 16 numbers ranging from 1
 np.logspace(start=-1, stop=7, num=16)
 ```
 
+Note how numbers are automatically displayed in [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation) to accomodate the broad range with a fixed number of digits.
+
 ### Filled arrays
 Sometimes, it is necessary to create an array consisting of all zeros, ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
 
@@ -271,10 +273,11 @@ np.eye(5)
 ```
 
 ### Random numbers
-The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same random numbers every time we run our code. This is important to facilitate reproducable results.
+The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same random numbers every time we run our code. This is important for reproducable results.
 
 ```{python}
 from numpy.random import default_rng
+
 rng = default_rng(42)
 x1 = rng.standard_normal(10)
 x2 = rng.uniform(size=(2, 2))
@@ -339,7 +342,7 @@ x.resize((2, 6))
 x
 ```
 
-Finally, the `reshape()` method works just like `resize()`, but it creates a copy of the array with the new shape (so it does *not* modify it in place):
+Finally, the `reshape()` method works just like `resize()`, but it creates a copy and returns the array with the new shape (so it does *not* modify it in place):
 
 ```{python}
 x.reshape((3, 4))
@@ -353,7 +356,7 @@ x = x.reshape((3, 4))
 x
 ```
 
-We do not even have to specify the complete shape when using the `reshape()` or `resize()` methods; because the total number of elements must stay the same, we can set one dimension in the new shape tuple to `-1`, which means that its size will be calculated automatically:
+We do not even have to specify the complete shape when using the `reshape()` or `resize()` methods. Since the total number of elements must stay the same, we can set one dimension in the new shape tuple to `-1`, which means that its size will be calculated automatically:
 
 ```{python}
 x.reshape((6, -1))  # -1 is inferred to mean 2 here
@@ -426,7 +429,7 @@ The following slices can be abbreviated using `...` notation:
 In contrast to lists, we can even use arrays (or lists) as indices inside the square brackets to pull out several individual elements. This is called fancy indexing.
 
 ```{python}
-x = np.arange(10, 20, dtype=np.int64)
+x = np.arange(10, 18, dtype=np.int64)
 x
 x[[1, 5, 1, 0]]  # elements 1, 5, 1, and 0
 ```
@@ -434,7 +437,12 @@ x[[1, 5, 1, 0]]  # elements 1, 5, 1, and 0
 It is also possible to use boolean values in fancy indexing. This can be used to filter values in an array, because the result will contain only those values corresponding to `True` locations:
 
 ```{python}
-x[[True, False, False, False, True, False, True, False, False, True]]
+x[[True, False, False, False, True, False, True, False]]
+```
+
+A comparison yields a boolean array:
+
+```{python}
 x > 15  # boolean array
 x[x > 15]
 ```
@@ -482,7 +490,7 @@ A @ B
 
 Note that if the shapes are not compatible with matrix multiplication (the number of columns of the first operand must equal the number of rows of the second operand), we will get an error.
 
-In summary, we saw that if two arrays have the same shape, operations are performed elementwise. Things get a little more complicated when the two arrays have different shapes -- we will discuss this so-called broadcasting soon. But before that, there's even more we can do with just a single array using special methods.
+In summary, we saw that if two arrays have the same shape, operations are performed elementwise. Things get a little more complicated when the two arrays have different shapes -- we will discuss this so-called broadcasting soon. But before that, there's even more we can do with just a single array using its special methods.
 
 ### Array methods
 There are many array methods that perform some kind of computation across *all* elements (regardless of the shape), such as calculating the total sum, minimum, maximum, or mean:
@@ -506,7 +514,7 @@ Similarly, we can compute the row means if we perform the operation over the col
 x.mean(axis=1)
 ```
 
-Remember that the specified axis will disappear from the result! This also works for more than one axis:
+Remember that the specified axis will disappear from the result! This also works for more than one axis simultaneously:
 
 ```{python}
 y = np.arange(60).reshape((4, 3, 5))  # four 3 x 5 arrays
@@ -534,29 +542,29 @@ If the shapes of the two arrays are the same after broadcasting, NumPy is able t
 Let's illustrate these rules with some examples:
 
 ```{python}
-x = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
-y = np.ones((2, 3), dtype=int)  # shape (2, 3)
+x = np.ones((2, 3), dtype=int)  # shape (2, 3)
+y = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
 x + y  # works
 ```
 
 ```{python}
 #| eval: false
-x = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
-y = np.ones((2, 4), dtype=int)  # shape (2, 4)
+x = np.ones((2, 4), dtype=int)  # shape (2, 4)
+y = np.array([1, 2, 3])  # shape (3,) -> (1, 3) -> (2, 3)
 x + y  # does not work because shapes (2, 3) and (2, 4) do not match
 ```
 ```
-ValueError: operands could not be broadcast together with shapes (3,) (2,4)
+ValueError: operands could not be broadcast together with shapes (2,4) (3,)
 ```
 
 ```{python}
-x = np.arange(6).reshape((2, 3))  # shape (2, 3) -> (1, 2, 3) -> (3, 2, 3)
-y = np.arange(18).reshape((3, 2, 3))  # shape (3, 2, 3)
+x = np.arange(18).reshape((3, 2, 3))  # shape (3, 2, 3)
+y = np.arange(6).reshape((2, 3))  # shape (2, 3) -> (1, 2, 3) -> (3, 2, 3)
 x + y  # works
 ```
 
 ## Useful functions
-This sections summarizes some useful functions that have not been mentioned already.
+This sections summarizes some useful functions that we have not discussed so far.
 
 ### Finding unique values
 A common task in many data analysis pipelines is to determine the number of unique elements in an array. The `np.unique()` function does exactly that (and more):
@@ -600,7 +608,7 @@ Given an array and a random generator, it is possible to create a random sample 
 
 ```{python}
 x = np.array([0, 1])
-rng.choice([0, 1], size=20)  # rng is defined in a previous example
+rng.choice(x, size=20)  # rng is defined in a previous example
 rng.choice(np.arange(20), size=10, replace=False)
 ```
 
