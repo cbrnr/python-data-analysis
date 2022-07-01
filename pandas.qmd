@@ -16,13 +16,13 @@ theme:
 
 ## Introduction
 
-Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in most cases this is not going to work. NumPy arrays are homogenous arrays, which means that all elements must have the same type. However, real-world tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might hold floating point numbers, text (strings), dates, or categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1].
+Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in many cases this is not going to work. NumPy arrays are homogenous arrays, which means that all elements must have the same type. However, real-world tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might hold floating point numbers, text (strings), dates, or categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1].
 
 [^1]: NumPy supports arrays with different data types through [structured arrays](https://numpy.org/doc/stable/user/basics.rec.html), but pandas data frames are usually much easier to work with in a typical data analysis pipeline.
 
-[Pandas](https://pandas.pydata.org/)[^2] offers a flexible data type for tabular data which builds upon NumPy arrays, but can accomodate heterogeneous column types: the so-called *data frame*.
+[Pandas](https://pandas.pydata.org/)[^2] offers a flexible data type for tabular data which builds upon NumPy arrays, but can accommodate heterogeneous column types: the so-called *data frame*.
 
-[^2]: Note that pandas is spelled with all lower-case letters. Therefore, we will capitalize the first letter only at the beginning of a sentence in this document.
+[^2]: Note that pandas is spelled with all lower-case letters. We will capitalize the first letter only at the beginning of a sentence.
 
 By convention, we import pandas as follows:
 
@@ -106,7 +106,7 @@ data = np.arange(1, 21).reshape((4, 5))
 pd.DataFrame(data)
 ```
 
-The resulting data frame does not look very different from a NumPy array, except for row and column labels. However, keep in mind that each column could hold values with a different data type. In fact, each column is actually a `pd.Series` object.
+The resulting data frame does not look very different from a NumPy array, except for row and column labels. However, keep in mind that each column could hold values with a different data type (because each column is actually a `pd.Series` object).
 
 We can supply custom column labels when creating a data frame:
 
@@ -155,7 +155,7 @@ df.index
 df.columns
 ```
 
-One of the most useful methods is `info()`, which displays essential information including the data type and number of non-missing values for each column:
+One of the most useful methods is `info()`, which displays essential information such as the data type and number of non-missing values for each column:
 
 ```{python}
 df.info()
@@ -336,9 +336,9 @@ df.iloc[:1, 1:3]  # row 0 and columns 1 and 2
 Pandas supports importing data from a multitude of different formats. In this section, we will showcase how to import the most common data formats. In almost all cases, a successfully imported file will be available as a data frame.
 
 ### Text files
-Text files are a popular option for storing data. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of parameter tweaking, because there is no universal standard on text file formatting (for example, text files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice for very large data sets.
+Text files are a popular option for storing small to medium-sized data sets. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of parameter tweaking, because there is no universal standard on how data should be formatted in a text file (for example, text files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice for very large data sets.
 
-The function [`pd.read_csv()`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) is the main workhorse. It can import almost any kind of text data and features a large number of parameters that can be tuned to the idiosyncracies of a given file. Let's start with a simple text file named `data.csv` (located in the current working directory) with the following contents:
+The function [`pd.read_csv()`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) is the main workhorse. It can import almost any kind of text data and features a large number of parameters that can be tuned to the idiosyncracies of a given file. Let's start with a simple text file named `data.csv` (located in the working directory) with the following contents:
 
 ```
 name,id,height,weight,gender,bp
@@ -350,7 +350,7 @@ Tom,5,182,77,m,101.7
 Mara,6,171,69,f,88.6
 ```
 
-This looks pretty straightforward. The first row is a header which contains the column labels. The six columns are separated by `,` (commas), and there are six rows of data (not including the header). Note that the `weight` value in the second row is missing.
+This looks pretty straightforward. The first row is a header with the column labels. The six columns are separated by `,` (commas), and there are six rows of data (not including the header). Note that the `weight` value in the second row is missing.
 
 Importing this file is as simple as:
 
@@ -377,7 +377,7 @@ df.dtypes
 df
 ```
 
-Alternatively, we can specify the desired data types when importing the file with the `dtype` argument. This is be more efficient especially if the data frame is large:
+Alternatively, we can specify the desired data types when importing the file with the `dtype` argument. This is more efficient especially if the data frame is large:
 
 ```{python}
 df = pd.read_csv(
@@ -410,7 +410,7 @@ In order to import this file, we need to tweak some parameters, but let's first 
 pd.read_csv("data.txt")
 ```
 
-As expected, this does not work, because the data frame consists of only two columns, and the column labels contain actual data. We can use the following arguments to adapt to the three changes we identified previously:
+As expected, this does not work, because the resulting data frame consists of only two columns, and the column labels contain actual data. We can use the following arguments to adapt to the three changes we identified previously:
 
 1. `header=None` specifies that there is no header row in the data file.
 2. `sep=";"` sets the column separator.
@@ -434,10 +434,10 @@ pd.read_csv(
 )
 ```
 
-Of course, we could also specify custom column types as we did in our previous example. The `pd.read_csv()` function has many additional parameters that we do not have time to discuss. Therefore, I encourage you to consult the [`pd.read_csv()` reference](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) whenever you have problems importing a specific file. Chances are that many issues can be solved by setting a parameter to a suitable value.
+Of course, we could also specify custom column types as we did in our previous example. The `pd.read_csv()` function has many additional parameters that we do not have time to discuss. Instead, I encourage you to consult the [`pd.read_csv()` reference](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) whenever you have problems importing a specific file. Chances are that many issues can be solved by setting a parameter to a suitable value.
 
 :::{.callout-tip}
-A quick way to create a toy data frame is to use `pd.read_csv()` in combination with a string with the contents of a ficticious CSV file. Since the function always expects a file name, we use `io.StringIO()` to imitate this behavior (we can read from the given string as if it was a file):
+A quick way to create a toy data frame is to use `pd.read_csv()` in combination with a string representing the contents of a ficticious CSV file. Since the function always expects a file name, we use `io.StringIO()` to imitate this behavior (we can read from the given string as if it was a file):
 
 ```{python}
 from io import StringIO
@@ -446,7 +446,7 @@ pd.read_csv(StringIO("A,B,C\n1.,2,x\n4.,5,y\n7.,8,z"))
 ```
 :::
 
-Other useful functions for reading text data include `pd.read_clipboard()`, `pd.read_fwf()`, `pd.read_json()`, and `pd.read_xml()`. Consult the [pandas documentation](https://pandas.pydata.org/docs/user_guide/io.html) to learn more about them.
+Other useful functions for reading text data include `pd.read_clipboard()`, `pd.read_fwf()`, `pd.read_json()`, and `pd.read_xml()`. Consult the [pandas documentation](https://pandas.pydata.org/docs/user_guide/io.html) to learn more.
 
 ### Excel files
 Like it or not, Excel is still a popular tool for analyzing (small) data sets. It is also common as a data storage format (`.xlsx`). Pandas can import Excel sheets with `pd.read_excel()` (which also supports the OpenDocument format `.ods` used by LibreOffice).
@@ -461,7 +461,7 @@ To import Excel files with pandas, you need to install the following packages de
 It is generally a good idea to install all three dependencies if you are planning to work with Excel files.
 :::
 
-Let's import data from an Excel file named `data.xlsx` (located in the current working directory), which contains the same table we saw in the previous section:
+Let's import data from an Excel file named `data.xlsx` (located in the working directory), which contains the same table we saw in the previous section:
 
 ```{python}
 pd.read_excel("data.xlsx")
@@ -485,7 +485,7 @@ Data wrangling can be broken down into the following five tasks (as defined in [
 -   Creating new variables (columns) based on existing ones
 -   Summarizing data, typically in combination with grouping data
 
-We will illustrate each operation using the `flights` data frame from the [nycflights13](https://github.com/tidyverse/nycflights13) data set. This data frame is available as a zipped CSV file in the current working directory, and we can import it as follows:
+We will illustrate each operation using the `flights` data frame from the [nycflights13](https://github.com/tidyverse/nycflights13) data set. This data frame is available as a zipped CSV file in the working directory, and we can import it as follows:
 
 ```{python}
 flights = pd.read_csv(
@@ -640,7 +640,7 @@ df.assign(
 )
 ```
 
-Notice that we can use columns that we just created to create another new variable like `speed`, where we use the `hours` column which we created in the previous line (but in the same method call). We do have to use a lambda function though, because `df["hours"]` does not exist in the original data frame.
+Notice that we can use columns that we just added to create another new variable like `speed`, where we use the `hours` column from the previous line (but in the same method call). We have to use a lambda function though, because `df["hours"]` does not exist in the original data frame.
 
 ### Summarizing data
 Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use the `agg()` method to summarize its values with a given aggregation function. An aggregation function can be any function which returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
@@ -723,7 +723,7 @@ The `value_counts()` method determines the number of occurrences for each unique
 flights["tailnum"].value_counts()
 ```
 
-This output shows that there are 4043 unique airplanes, each of which is listed with its corresponding number of flights. The 10 airplanes with the most flights are:
+This output shows that there are 4043 unique airplanes, each of which is listed with its corresponding number of flights. The ten airplanes with the most flights are:
 
 ```{python}
 flights["tailnum"].value_counts().head(10)
@@ -765,15 +765,15 @@ The problem here is that we do not really need the names `df1` and `df2` other t
 ```
 
 :::{.callout-important}
-Breaking up a pipeline into multiple rows (as shown in the previous example) creates a nicely formatted representation of what happens step by step. However, this requires enclosing the entire pipleline in parentheses.
+Breaking up a pipeline into multiple rows (as shown in the previous example) creates a nicely formatted representation of the sequence of steps. However, we need to enclose the entire pipeline in parentheses.
 :::
 
 ## Tidy data
 There are many ways to organize data into rows and columns, but the [tidy data](https://www.jstatsoft.org/article/view/v059i10) format has some compelling advantages. A table is tidy when
 
--   each variable corresponds to exactly one column,
--   each observation corresponds to exactly one row,
--   and each value corresponds to exactly one cell.
+-   each *variable* corresponds to exactly one *column*,
+-   each *observation* corresponds to exactly one *row*,
+-   and each *value* corresponds to exactly one *cell*.
 
 > "Tidy datasets are all alike, but every messy dataset is messy in its own way." -- Hadley Wickham
 
@@ -822,9 +822,9 @@ For the same reason, the next table is also not tidy. It contains a combination 
 
 : Variables "cases" and "population" are combined in one column. {#tbl-messy-2}
 
-In pandas, working with tidy data greatly facilitates many operations, so whenever possible this should be the preferred table format. However, depending on the task, this might not always be possible or practical, so it is completely fine if another data organization works better.
+In pandas, working with tidy data facilitates many operations, so whenever possible this should be the preferred table format. However, depending on the task, this might not always be possible or practical, so it is completely fine if another data organization works better.
 
-Pandas makes it pretty straightforward to convert any given table into a tidy format (or vice versa). Each data frame has a `pivot()` method for this task. Let's start with data from @tbl-messy-1 and use `pivot()` to make it tidy:
+Pandas makes it pretty straightforward to convert any given table to a tidy format (or vice versa). Each data frame has a `pivot()` method for this task. Let's start with data from @tbl-messy-1 and use `pivot()` to make it tidy:
 
 ```{python}
 messy1 = pd.read_csv(StringIO("""country,year,type,count
@@ -848,7 +848,7 @@ The `index` argument specifies which columns should be moved to new rows (the in
 messy1.pivot(index=["country", "year"], columns="type", values="count")
 ```
 
-This result is a data frame consisting of two columns `cases` and `population` and an index consisting of `country` and `year` (a so-called multiindex). We can convert a multiindex into separate columns using the `reset_index()` method (which resets the index to the default integer series starting at zero):
+This result is a data frame consisting of two columns `cases` and `population` and an index consisting of `country` and `year` (a so-called hierarchical index or multi-index). We can convert a multi-index into separate columns using the `reset_index()` method (which resets the index to the default integer series starting at zero):
 
 ```{python}
 (messy1
@@ -899,7 +899,7 @@ tidy2 = messy2.loc[:, ["country", "year"]]
 tidy2[["count", "population"]] = messy2["rate"].str.split("/", expand=True)
 ```
 
-Now we are almost done, the data frame is tidy, but the columns types of `count` and `population` are still not numeric (they are `object` just like the original column). We need to explicitly convert them, for example with `pd.to_numeric()`:
+Now we are almost done, the data frame is tidy, but the column types of `count` and `population` are still not numeric (they are `object` just like the original columns). We need to explicitly convert them, for example with `pd.to_numeric()`:
 
 ```{python}
 tidy2["count"] = pd.to_numeric(tidy2["count"])
@@ -908,7 +908,7 @@ tidy2
 ```
 
 ## COVID-19 example
-Let's apply some of the things we learned in this chapter to a real-world data set: official Covid-19 cases in Austria. The data is available as a text file at https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv (updated daily), and a snapshot from June 15 2022 (renamed to `covid19.csv`) is located in the current working directory.
+Let's apply some of the things we learned in this chapter to a real-world data set: official COVID-19 cases in Austria. The data is available as a text file [here](https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv) (updated daily), and a snapshot from June 15 2022 (renamed to `covid19.csv`) is located in the working directory.
 
 Using `pd.read_csv()`, we can import this file as follows:
 
@@ -936,7 +936,7 @@ covid19.info()
 
 There are many interesting questions we could try to answer with this data set. Let's highlight a few simple ones that each introduce a new feature that we have not seen before.
 
-First, because Covid-19 infections heavily depend on the seasibs, we could be interested in average daily new cases per month. A datetime series exposes specialized method in its `dt` method namespace. Here, we use `dt.month` to extract the month of the year (1–12) and add this information as a new column `month`. Then we group by `month` and compute the average in each group:
+First, because COVID-19 infections heavily depend on the seasons, we could be interested in average daily new cases per month. A datetime series exposes specialized method in its `dt` method namespace. Here, we use `dt.month` to extract the month of the year (1–12) and add this information as a new column `month`. Then we group by `month` and compute the average in each group:
 
 ```{python}
 (covid19
@@ -946,7 +946,7 @@ First, because Covid-19 infections heavily depend on the seasibs, we could be in
 )
 ```
 
-Similarly, we know that new cases also depend on the day of the week, because fewer tests are administered on the weekend. Therefore, the average cases aggregated per weekday are (0–6 correspond to Monday–Sunday):
+Similarly, we know that new cases also depend on the day of the week, because fewer tests are administered on the weekend. Therefore, we can compute average cases aggregated per weekday (0–6 correspond to Monday–Sunday) as follows:
 
 ```{python}
 (covid19
@@ -956,7 +956,18 @@ Similarly, we know that new cases also depend on the day of the week, because fe
 )
 ```
 
-We can also create plots directly from dataframes and/or single columns. That way, we can recreate the famous time course of daily Covid-19 infections over the whole time period. We will plot the daily values for Austria with "Time" on the *x*-axis and new cases on the *y*-axis:
+Let's combine these two separate analyses and calculate the average number of cases on each weekday per month by grouping by both columns:
+
+```{python}
+(covid19
+    .assign(month=covid19["Time"].dt.month)
+    .assign(weekday=covid19["Time"].dt.weekday)
+    .groupby(["month", "weekday"])
+    .agg({"AnzahlFaelle": "mean"})
+)
+```
+
+Finally, we can also create plots directly from data frames and/or single columns. That way, we can recreate the famous time course of daily COVID-19 infections over the whole time period. We will plot the daily values for Austria with "Time" on the *x*-axis and new cases on the *y*-axis:
 
 ```{python}
 #| eval: false
@@ -1002,7 +1013,7 @@ fig.patch.set_alpha(0)
 plt.show()
 ```
 
-Note that when we plot a single column, the index will be displayed on the *x*-axis. That's why we explicitly set the index to the `Time` column (which means that the time column gets "promoted" to the index). After that, we pick the column of interest and call its `plot()` method to generate the visualization.
+Note that when we plot a single column, the index will be displayed on the *x*-axis. That's why we explicitly set the index to the `Time` column (which means that this column gets "promoted" to the index). After that, we pick the column of interest and call its `plot()` method to generate the visualization.
 
 ---
 
