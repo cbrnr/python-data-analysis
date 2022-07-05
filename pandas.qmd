@@ -743,8 +743,8 @@ Almost all interesting data wrangling tasks require a combination of the five pr
 ```{python}
 df1 = flights.filter(["dep_delay", "arr_delay", "distance", "air_time"])
 df2 = df1.assign(
-    gain=df["arr_delay"] - df["dep_delay"],
-    hours=df["air_time"] / 60,
+    gain=df1["arr_delay"] - df1["dep_delay"],
+    hours=df1["air_time"] / 60,
     speed=lambda x: x["distance"] / x["hours"]
 )
 df2.sort_values("speed")
@@ -756,8 +756,8 @@ The problem here is that we do not really need the names `df1` and `df2` other t
 (flights
     .filter(["dep_delay", "arr_delay", "distance", "air_time"])
     .assign(
-        gain=df["arr_delay"] - df["dep_delay"],
-        hours=df["air_time"] / 60,
+        gain=flights["arr_delay"] - flights["dep_delay"],
+        hours=flights["air_time"] / 60,
         speed=lambda x: x["distance"] / x["hours"]
     )
     .sort_values("speed", ascending=False)
