@@ -2,11 +2,11 @@
 title: "IPython"
 subtitle: "An enhanced interactive Python interpreter"
 author: "Clemens Brunner"
-date: 2022-05-17
+date: 2023-07-03
 format: html
 toc: true
 toc-title: ""
-engine: knitr
+engine: jupyter
 highlight-style: github
 title-block-banner: true
 theme:
@@ -15,7 +15,8 @@ theme:
 ---
 
 ## Introduction
-Starting `python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as Terminal on macOS and Command Prompt or PowerShell on Windows) invokes the interactive interpreter. This mode is especially nice for interactively playing around with data using a workflow called read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)). Basically, Python *reads* the command we just entered, *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
+
+Running `python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as Terminal on macOS and Command Prompt or PowerShell on Windows) invokes the *interactive* Python interpreter. This mode is especially useful for interactively playing around with data using a workflow called read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)): Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
 
 Here's an example. After starting the interactive Python interpreter, we are presented with a prompt that looks like this:
 
@@ -32,8 +33,10 @@ The prompt indicates that Python is waiting for us to type a command. After ente
 
 All of this is already built into the standard Python interpreter. However, the interactive experience is pretty bare-bones: there is no syntax highlighting, tab completion is rudimentary, there is no shortcut for viewing documentation, printing or changing the working directory requires importing the `os` module, and quickly running a shell command (such as `ls` to list the contents of the working directory) is not possible. All of these things and more are supported in [IPython](https://ipython.readthedocs.io/en/stable/index.html) (see [this page](https://ipython.readthedocs.io/en/stable/interactive/python-ipython-diff.html) for a summary of the most important differences between standard Python and IPython).
 
+
 ## First steps
-Before we can use IPython, we need to install it, for example via `pip install ipython`. This adds a new command `ipython` to our path, which we can use to start the enhanced interactive interpreter. Basically, instead of typing `python` in the command line we can now start `ipython`.
+
+Before we can use IPython, we need to install it, for example via `pip install ipython`. This adds a new command `ipython` to our path, which we can use to start the enhanced interactive interpreter. Basically, instead of typing `python` in the command line, we can now run `ipython`.
 
 The prompt looks a little different from the regular one:
 
@@ -41,14 +44,14 @@ The prompt looks a little different from the regular one:
 In [1]:
 ```
 
-It includes a counter so that you always know how many commands you have entered in the current session. Let's try the same command we used previously:
+It includes a counter in square brackets, so we always know how many commands we have already entered in the current session. Let's try the same command we used in the previous section:
 
 ```
 In [1]: 1 + 1
 Out[1]: 2
 ```
 
-Every output is also numbered, which makes it really easy to connect it to the corresponding input. In addition, the prompts are colored, which unfortunately cannot be reproduced here.
+Every output is also numbered, which makes it really easy to connect it to the corresponding input. In addition, the prompts are colored (which unfortunately cannot be reproduced here).
 
 IPython also creates names for recent expressions. For example, we can access the last result with an underscore `_`:
 
@@ -59,14 +62,16 @@ Out[2]: 2
 
 In addition to the last result, we can also get the two previous ones with double and triple underscores, respectively. Alternatively, we can access a specific output by name via `_1`, `_2`, etc. (the numbers correspond to the output number). This also works for inputs using `_i1`, `_i2`, and so on.
 
-Finally, all inputs and outputs are also available as `In` and `Out`. For example, the first input and output can be accessed with `In[1]` and `Out[1]`, respectively.
+Finally, all inputs and outputs are also available as `In` (a list) and `Out` (a dictionary). For example, the first input and output can be accessed with `In[1]` and `Out[1]`, respectively.
+
 
 ## Keyboard shortcuts
-IPython offers many useful keyboard shortcuts that can significantly speed up the interactive development workflow. The most important shortcuts are:
 
-- <kbd>↑</kbd> and <kbd>↓</kbd> go back and forward in the command history. This even works when typing a few characters and then pressing the up arrow key, which will search only those commands that start with the given characters.
-- <kbd>Ctrl</kbd><kbd>r</kbd> starts a reverse search for a command. For example, if you reverse-search for "sum", you will get the first (most recent) command in the history which contains these characters. Repeatedly pressing <kbd>Ctrl</kbd><kbd>r</kbd> searches previous matching commands.
-- `?` followed by a Python name displays the corresponding documentation. For example, `?sum` shows help for the built-in `sum()` function. It is also possible to append `?` to the name, such as `sum?`.
+IPython offers many useful keyboard shortcuts that can significantly speed up an interactive development workflow. The most important shortcuts are:
+
+- <kbd>↑</kbd> and <kbd>↓</kbd> go back and forward in the command history. This even works when first typing a few characters and then pressing the up arrow key, which will search only those commands that start with the given characters.
+- <kbd>Ctrl</kbd><kbd>r</kbd> starts a reverse search for a command. For example, if you reverse-search for "sum", you will get the first (most recent) command in the history which *contains* these characters. Repeatedly pressing <kbd>Ctrl</kbd><kbd>r</kbd> searches previous matching commands.
+- `?` followed by a Python name displays the corresponding documentation. For example, `?sum` shows the help text for the built-in `sum()` function. It is also possible to append `?` to the name, such as `sum?`.
 - Typing `exit` actually exits IPython. In the regular Python interpreter, only `exit()` works.
 - Tab completion works with most Python objects. For example, if we want to know which methods are available for `str`, we type `str.` and then hit the <kbd>Tab</kbd> key. This brings up a list of all possible methods associated with `str`, which we can navigate either with <kbd>Tab</kbd> or the arrow keys.
 - <kbd>Ctrl</kbd><kbd>c</kbd> deletes the current input and also interrupts any running operation.
@@ -74,33 +79,53 @@ IPython offers many useful keyboard shortcuts that can significantly speed up th
 
 
 ## Magic commands
+
 Magic commands are special IPython commands that provide functionality such as printing or changing the working directory. Normally, magic commands start with a `%` character, but by default they are also available without this prefix (unless a Python object with the same name exists). Here are some frequently used magic commands (a full list is available [here](https://ipython.readthedocs.io/en/stable/interactive/magics.html)):
 
 - `%cd <some_directory>` changes the working directory to `<some_directory>`.
 - `%history` prints the (input) history.
-- `%ls` lists the contents of the current working directory.
 - `%matplotlib` enables interactive Matplotlib plotting (which means that plots are immediately shown and do not block the REPL).
 - `%paste` pastes text (code) from the clipboard.
-- `%pip <arguments>` runs `pip` with the given `<arguments>`.
 - `%pwd` prints the current working directory.
-- `%run <script.py>` runs the complete script stored in `<script.py>`.
+- `%ls` lists the contents of the current working directory.
+- `%run <script.py>` runs the entire script `<script.py>` in the current interactive session.
 - `%timeit <statement>` times the execution of a statement.
 
 :::{.callout-note}
-Magic commands are not Python commands. Therefore, they should not be included in a Python script.
+Magic commands are not valid Python commands. Therefore, they should not be used in a Python script.
 :::
 
+
 ## Shell commands
-It is often useful to run commands directly in the underlying shell. This can be achieved in IPython by prefixing a shell command with a `!` (bang). Many commands also work without the bang. Here are some examples:
+
+It is often useful to run commands directly in the underlying shell. This can be achieved in IPython by prefixing a shell command with a `!` (bang). Here are some examples that work on macOS and Linux (but not on Windows):
 
 - `!ls` lists the contents of the working directory.
 - `!less <some_file.txt>` shows the contents of the file `<some_file.txt>`.
-- `!date` runs the `date` shell command (which displays the current time and date). Note that it is even possible to capture the output of a shell command to access it in Python later on, for example `d = !date`.
+- `!date` runs the `date` shell command (which displays the current time and date).
+
+It is even possible to capture the output of a shell command to access it in Python later on, for example:
+
+```{python}
+d = !date
+d
+```
+
+```{python}
+files = !ls
+files[:5]
+```
+
+:::{.callout-tip}
+Running shell commands only works for a given shell. For example, the `ls` command is available on macOS and Linux shells, but not on the Windows `cmd` shell. However, when using `powershell`, many commands like `ls` should work.
+:::
+
 
 ## Jupyter notebooks
+
 IPython includes support for web-based documents for [literate programming](https://en.wikipedia.org/wiki/Literate_programming), so-called [Jupyter](https://jupyter.org/) notebooks. They combine [Markdown](https://daringfireball.net/projects/markdown/) text with code cells, which is useful for exploratory data analysis, tutorials, lecture notes, and so on. However, they are not great for reproducible research (unless the whole notebook is rendered from top to bottom and all results are computed from scratch).
 
-[Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents.
+[Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents. Another nice feature of Quarto is that it supports languages other than Python, for example R and Julia.
 
 We will not cover any of these notebook-like tools in this course, but it is good to know that they exist (so you know where to start). By the way, the course material you are reading right now is written with Quarto, and if you are interested you can take a look at the source to find out how it works.
 
