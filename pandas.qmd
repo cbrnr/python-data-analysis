@@ -6,7 +6,7 @@ date: 2023-07-03
 format: html
 toc: true
 toc-title: ""
-engine: jupyter
+engine: knitr
 highlight-style: github
 title-block-banner: true
 theme:
@@ -22,7 +22,7 @@ Why do we need another package on top of NumPy? Could we not just use NumPy arra
 
 [Pandas](https://pandas.pydata.org/)[^2] offers a flexible data type for tabular data which builds upon NumPy arrays, but can accommodate heterogeneous column types: the so-called *data frame*.
 
-[^2]: Note that pandas is spelled with all lower-case letters. We will capitalize the first letter only at the beginning of a sentence.
+[^2]: Note that pandas is spelled with all lower-case letters. We will capitalize the first letter only at the   beginning of a sentence.
 
 By convention, we import pandas as follows:
 
@@ -32,7 +32,9 @@ import pandas as pd
 
 Before we discuss data frames, we will introduce series as essential building blocks.
 
+
 ## Series
+
 A pandas series (`pd.Series`) is a sequence-like homogeneous object, similar to a one-dimensional NumPy array. In fact, series are based on NumPy arrays under the hood, so they share important properties. For example, just like a NumPy array, a series has a specific data type (which means that all elements have the same type).
 
 We can construct a series from any iterable, such as a standard list. Here's an example:
@@ -93,11 +95,16 @@ pd.Series([True, True, False], dtype="boolean")
 
 In general, it is recommended to use these extension data types because they perform as well as the core types, but offer better support for missing values or other functionality.
 
+
 ## Data frames
+
 Pandas represents tabular data with a data frame, which is available as the `pd.DataFrame` type. It is basically a collection of columns, which correspond to individual `pd.Series` objects.
 
+
 ### Creating data frames
+
 #### From arrays
+
 Let's start with a simple example, which creates a data frame from a two-dimensional NumPy array:
 ```{python}
 import numpy as np
@@ -116,7 +123,9 @@ pd.DataFrame(data, columns=["A", "B", "C", "D", "E"])
 
 Similarly, we could also set custom row labels with the `index` argument. However, this is rarely needed since consecutively numbered rows starting at zero are fine for most use cases.
 
+
 #### Column-wise
+
 Another way to generate a data frame is to pass a dictionary, where each key corresponds to a column label and the corresponding value is a sequence-like object containing the column elements:
 
 ```{python}
@@ -129,7 +138,9 @@ In this example, each column has a different data type. The first column contain
 The first element in the list `[1., 2, 3, 4]` is a float. Since all elements within a column must have the same type, all other values in that column are coerced to float as well.
 :::
 
+
 #### Row-wise
+
 Sometimes, we might want to create a data frame row by row. We can use `pd.DataFrame.from_dict()` in combination with `orient="index"` for this purpose:
 
 ```{python}
@@ -138,7 +149,9 @@ pd.DataFrame.from_dict({1: [1, "a", 3, 5.], 2: [2, "b", 4, 6.]}, orient="index")
 
 The dictionary keys are used for the row labels this time.
 
+
 ### Viewing data frames
+
 Every data frame has useful attributes and methods that we can use to inspect it in more detail. Let's start with one of the example data frames we saw previously:
 
 ```{python}
@@ -222,7 +235,9 @@ We can round the values in this table to fit more columns on the screen:
 df.describe().round(2)  # rounded to two decimal places
 ```
 
+
 ### Missing data
+
 Almost any real-word data contains missing values. Pandas encodes missing numeric values as `NaN` ("Not a Number"), a sentinel value defined in the [IEEE 754 floating point standard](https://en.wikipedia.org/wiki/IEEE_754). Therefore, this missing value only exists for floating point data, and integer series are automatically converted to float if they contain missing values. Datetime types have a special `NaT` ("Not a Time") value to represent missing dates. Strings and boolean types can use `None` for missing values. In summary, missing data is represented with various different values depending on the underlying data type.
 
 Recently, pandas has started to unify missing data support with the native `NA` ("Not Available") value (available as `pd.NA`). Future versions of pandas will likely support `NA` for all data types, but right now we have to live with the variety of different missing value representations (which of course are all handled correctly by pandas).
@@ -263,8 +278,11 @@ df.dtypes
 df.isna()
 ```
 
+
 ### Indexing
+
 #### Basic indexing
+
 Pandas data frames can be indexed to create subsets of the underlying data. Using square bracket notation, single columns can be indexed by their label:
 
 ```{python}
@@ -296,7 +314,9 @@ df[df["A"] > 1]
 df[[True, True, False]]  # rows 0 and 1
 ```
 
+
 #### Indexing with `loc` and `iloc`
+
 More sophisticated indexing is available via the `loc` and `iloc` attributes. Whereas `loc` uses row and column *labels*, `iloc` works with integer *indices* instead. Both variants support simultaneous row and column indexing (by passing a tuple with the desired row and column labels or indices, respectively).
 
 Here are some examples showing `loc` in action (note that slices include the end point). First, we can grab a single column by its label:
@@ -332,10 +352,14 @@ df.iloc[:, 1:3]  # columns 1 and 2
 df.iloc[:1, 1:3]  # row 0 and columns 1 and 2
 ```
 
+
 ## Importing data
+
 Pandas supports importing data from a multitude of different formats. In this section, we will showcase how to import the most common data formats. In almost all cases, a successfully imported file will be available as a data frame.
 
+
 ### Text files
+
 Text files are a popular option for storing small to medium-sized data sets. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of parameter tweaking, because there is no universal standard on how data should be formatted in a text file (for example, text files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice for very large data sets.
 
 The function [`pd.read_csv()`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) is the main workhorse. It can import almost any kind of text data and features a large number of parameters that can be tuned to the idiosyncracies of a given file. Let's start with a simple text file named `data.csv` (located in the working directory) with the following contents:
@@ -448,7 +472,9 @@ pd.read_csv(StringIO("A,B,C\n1.,2,x\n4.,5,y\n7.,8,z"))
 
 Other useful functions for reading text data include `pd.read_clipboard()`, `pd.read_fwf()`, `pd.read_json()`, and `pd.read_xml()`. Consult the [pandas documentation](https://pandas.pydata.org/docs/user_guide/io.html) to learn more.
 
+
 ### Excel files
+
 Like it or not, Excel is still a popular tool for analyzing (small) data sets. It is also common as a data storage format (`.xlsx`). Pandas can import Excel sheets with `pd.read_excel()` (which also supports the OpenDocument format `.ods` used by LibreOffice).
 
 :::{.callout-important}
@@ -469,14 +495,18 @@ pd.read_excel("data.xlsx")
 
 We can use many of the arguments we already know from `pd.read_csv()` (such as `header` and `dtype`). In addition, Excel files can contain multiple sheets. To specify which sheet you want to import, use the `sheet_name` parameter. For more information on all available parameters, consult the [`pd.read_excel()` reference](https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html).
 
+
 ### SPSS/Stata/SAS files
+
 Similar to Excel files, pandas can import data stored in SPSS, Stata, and SAS files with dedicated reader functions [`pd.read_spss()`](https://pandas.pydata.org/docs/reference/api/pandas.read_spss.html), [`pd.read_stata()`](https://pandas.pydata.org/docs/reference/api/pandas.read_stata.html), and [`pd.read_sas()`](https://pandas.pydata.org/docs/reference/api/pandas.read_sas.html).
 
 :::{.callout-important}
 Reading SPSS, Stata, and SAS files requires the `pyreadstat` package.
 :::
 
+
 ## Data wrangling
+
 Data wrangling can be broken down into the following five tasks (as defined in [R for Data Science](https://r4ds.had.co.nz/transform.html#dplyr-basics)):
 
 -   Filtering observations (rows)
@@ -510,7 +540,9 @@ Notice that in order to get better support for missing values, we specify the da
 
 The `nycflights13` data set contains data on all 336,776 flights departing from New York City airports ([JFK](https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport), [LGA](https://en.wikipedia.org/wiki/LaGuardia_Airport), and [EWR](https://en.wikipedia.org/wiki/Newark_Liberty_International_Airport)) in 2013. Let's see what we can find out about that data set.
 
+
 ### Filtering observations
+
 First, we might want to know how many flights departed on New Year's Day 2013. Each flight is represented by a row, so we need to filter rows with flights that departed on January 1 (columns `month` and `day` contain the dates).
 
 The `query()` method filters rows according to a specified condition based on values in one or more columns. The query must be passed as a single string, which may contain column names without having to use any special indexing syntax. The query returns a new data frame containing only the filtered rows, which in our example consists of 842 rows:
@@ -563,7 +595,9 @@ flights.dropna(subset="air_time")
 The `dropna()` method does *not* modify the original data frame by default (instead, it returns a new data frame). This can be changed by setting `inplace=True`.
 :::
 
+
 ### Arranging rows
+
 Another frequently used operation is sorting rows in a data frame according to values in one or more columns. The `sort_values()` method accomplishes this task, by default is arranges rows in ascending order. We can use this method to sort all flights from first to last scheduled departure time within the entire year as follows:
 
 ```{python}
@@ -588,7 +622,9 @@ flights.sort_values("dep_delay", ascending=False)["dep_delay"]
 
 1301 minutes are almost 22 hours! That's a long delay for sure!
 
+
 ### Selecting variables
+
 Next, we will learn how to select specific columns with the `filter()` method. Let's start with a basic example, where we pick two columns passed as a list of column labels:
 
 ```{python}
@@ -621,7 +657,9 @@ flights.filter(regex="time$")
 
 Regular expressions are a powerful way to describe text patterns. We do not have time to go into any more details, but it pays off to learn at least the basic concepts (for example with [this tutorial](https://regexone.com/)).
 
+
 ### Creating new variables
+
 First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns we will add in this section.
 
 ```{python}
@@ -642,7 +680,9 @@ df.assign(
 
 Notice that we can use columns that we just added to create another new variable like `speed`, where we use the `hours` column from the previous line (but in the same method call). We have to use a lambda function though, because `df["hours"]` does not exist in the original data frame.
 
+
 ### Summarizing data
+
 Summarizing data can yield valuable insights, especially when performed on grouped data. In most cases, our goal is to summarize or aggregate values from a single column. Each column is represented by a `pd.Series`, and we can use the `agg()` method to summarize its values with a given aggregation function. An aggregation function can be any function which returns exactly one value (a scalar) such as the mean, median, standard deviation, and so on.
 
 Here's an example which summarizes the `dep_delay` column by its mean:
@@ -737,7 +777,9 @@ How many airplanes have just one flight?
 
 Here, we exploited the fact that summing a boolean series counts `True` as 1 and `False` as 0.
 
+
 ### Pipelines
+
 Almost all interesting data wrangling tasks require a combination of the five previously mentioned basic operations. You might have already noticed this in some examples where we first picked a subset of columns and then performed some operations (like adding new variables). Usually, this requires multiple steps involving temporary names, for example:
 
 ```{python}
@@ -768,7 +810,9 @@ The problem here is that we do not really need the names `df1` and `df2` other t
 Breaking up a pipeline into multiple rows (as shown in the previous example) creates a nicely formatted representation of the sequence of steps. However, we need to enclose the entire pipeline in parentheses.
 :::
 
+
 ## Tidy data
+
 There are many ways to organize data into rows and columns, but the [tidy data](https://www.jstatsoft.org/article/view/v059i10) format has some compelling advantages. A table is tidy when
 
 -   each *variable* corresponds to exactly one *column*,
@@ -907,7 +951,9 @@ tidy2["population"] = pd.to_numeric(tidy2["population"])
 tidy2
 ```
 
+
 ## COVID-19 example
+
 Let's apply some of the things we learned in this chapter to a real-world data set: official COVID-19 cases in Austria. The data is available as a text file [here](https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv) (updated daily), and a snapshot from June 15 2022 (renamed to `covid19.csv`) is located in the working directory.
 
 Using `pd.read_csv()`, we can import this file as follows:
