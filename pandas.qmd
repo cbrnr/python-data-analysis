@@ -51,7 +51,7 @@ We can enforce a specific data type with the `dtype` argument:
 pd.Series([1, 2, 3, 4, 5], dtype="float64")
 ```
 
-Pandas data types are based on [NumPy array scalars](https://numpy.org/doc/stable/reference/arrays.scalars.html). The most common numerical data types are:
+Pandas data types are based on [NumPy array scalars](https://numpy.org/doc/stable/reference/arrays.scalars.html). The most common [sized numerical types](https://numpy.org/doc/stable/reference/arrays.scalars.html#sized-aliases) are:
 
 - Integers: `int8`, `int16`, `int32`, and `int64`
 - Unsigned integers: `uint8`, `uint16`, `uint32`, and `uint64`
@@ -98,7 +98,7 @@ In general, it is recommended to use these extension data types because they per
 
 ## Data frames
 
-Pandas represents tabular data with a data frame, which is available as the `pd.DataFrame` type. It is basically a collection of columns, which correspond to individual `pd.Series` objects.
+Most real-world data can be represented as a table consisting of rows and columns. Pandas represents tabular data with a data frame, which is available as the `pd.DataFrame` type. It is basically a collection of columns, which correspond to individual `pd.Series` objects.
 
 
 ### Creating data frames
@@ -113,7 +113,7 @@ data = np.arange(1, 21).reshape((4, 5))
 pd.DataFrame(data)
 ```
 
-The resulting data frame does not look very different from a NumPy array, except for row and column labels. However, keep in mind that each column could hold values with a different data type (because each column is actually a `pd.Series` object).
+The resulting data frame does not look very different from a NumPy array, except for row and column labels. However, keep in mind that each column *could* hold values with a different data type (because each column is actually a `pd.Series` object).
 
 We can supply custom column labels when creating a data frame:
 
@@ -155,9 +155,7 @@ The dictionary keys are used for the row labels this time.
 Every data frame has useful attributes and methods that we can use to inspect it in more detail. Let's start with one of the example data frames we saw previously:
 
 ```{python}
-df = pd.DataFrame(
-    {"A": [1., 2, 3, 4], "B": ["w", "x", "y", "z"], "C": np.arange(4)}
-)
+df = pd.DataFrame({"A": [1., 2, 3, 4], "B": ["w", "x", "y", "z"], "C": np.arange(4)})
 df
 ```
 
@@ -240,14 +238,12 @@ df.describe().round(2)  # rounded to two decimal places
 
 Almost any real-word data contains missing values. Pandas encodes missing numeric values as `NaN` ("Not a Number"), a sentinel value defined in the [IEEE 754 floating point standard](https://en.wikipedia.org/wiki/IEEE_754). Therefore, this missing value only exists for floating point data, and integer series are automatically converted to float if they contain missing values. Datetime types have a special `NaT` ("Not a Time") value to represent missing dates. Strings and boolean types can use `None` for missing values. In summary, missing data is represented with various different values depending on the underlying data type.
 
-Recently, pandas has started to unify missing data support with the native `NA` ("Not Available") value (available as `pd.NA`). Future versions of pandas will likely support `NA` for all data types, but right now we have to live with the variety of different missing value representations (which of course are all handled correctly by pandas).
+Recently, pandas has started to unify missing data support with a native `NA` ("Not Available") value (available as `pd.NA`). Future versions of pandas will likely support `NA` for all data types, but right now we have to live with the variety of different missing value representations (which of course are all handled correctly by pandas).
 
 To illustrate these ideas, let's create a data frame with some missing values:
 
 ```{python}
-df = pd.DataFrame(
-    {"A": [1, None, 3], "B": [1., 2., None], "C": [True, False, None]}
-)
+df = pd.DataFrame({"A": [1, None, 3], "B": [1., 2., None], "C": [True, False, None]})
 df
 df.dtypes
 ```
@@ -360,7 +356,7 @@ Pandas supports importing data from a multitude of different formats. In this se
 
 ### Text files
 
-Text files are a popular option for storing small to medium-sized data sets. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of parameter tweaking, because there is no universal standard on how data should be formatted in a text file (for example, text files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice for very large data sets.
+Text files are a popular option for storing small to medium-sized data sets. Because text files are simple, they can be opened with any text editor and almost any tool you might use for data analysis. On the other hand, importing text files might involve a lot of parameter tweaking, because there is no universal standard on how data should be formatted inside the file (for example, text files can use arbitrary column separators, header rows, comments, decimal number formats, and so on). Moreover, text files store data inefficiently, which makes them a bad choice for very large data sets.
 
 The function [`pd.read_csv()`](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html) is the main workhorse. It can import almost any kind of text data and features a large number of parameters that can be tuned to the idiosyncracies of a given file. Let's start with a simple text file named `data.csv` (located in the working directory) with the following contents:
 
