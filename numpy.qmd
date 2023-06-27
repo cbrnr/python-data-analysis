@@ -2,11 +2,11 @@
 title: "NumPy"
 subtitle: "Basic building blocks and operations"
 author: "Clemens Brunner"
-date: 2022-05-10
+date: 2023-07-03
 format: html
 toc: true
 toc-title: ""
-engine: knitr
+engine: jupyter
 highlight-style: github
 title-block-banner: true
 theme:
