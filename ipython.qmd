@@ -10,8 +10,8 @@ engine: jupyter
 highlight-style: github
 title-block-banner: true
 theme:
-  light: [flatly, theme-light.scss]
-  dark: [darkly, theme-dark.scss]
+  light: flatly
+  dark: darkly
 ---
 
 ## Introduction

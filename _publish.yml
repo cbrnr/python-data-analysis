@@ -1,0 +1,4 @@
+- source: ipython.qmd
+  quarto-pub:
+    - id: 2fef694e-5900-4d6e-9db1-62d79f32945c
+      url: 'https://cbrnr.quarto.pub/python-data-analysis-01'
