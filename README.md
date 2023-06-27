@@ -6,17 +6,7 @@
   - Alternatives (R, Julia)
   - Essential packages (IPython, NumPy, pandas, Matplotlib)
 1. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
-2. [NumPy](https://rpubs.com/cbrnr/python_numpy)
-  - Introduction
-  - The n-dimensional array
-  - Creating arrays
-  - Shape and reshape
-  - Indexing and slicing
-  - Array operations
-  - Broadcasting
-  - Useful functions
-  - Additional resources
-  - Exercises
+2. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
 3. [Pandas](https://rpubs.com/cbrnr/python_pandas)
   - Introduction
   - Series

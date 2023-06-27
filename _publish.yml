@@ -2,3 +2,7 @@
   quarto-pub:
     - id: 2fef694e-5900-4d6e-9db1-62d79f32945c
       url: 'https://cbrnr.quarto.pub/python-data-analysis-01'
+- source: numpy.qmd
+  quarto-pub:
+    - id: 6f999cc8-82f7-4d05-928b-be0b494e880f
+      url: 'https://cbrnr.quarto.pub/python-data-analysis-02'
