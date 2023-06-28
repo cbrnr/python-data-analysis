@@ -1,10 +1,10 @@
 # Data Analysis with Python
 
 0. Introduction
-  - Aim of this workshop
-  - Why Python?
-  - Alternatives (R, Julia)
-  - Essential packages (IPython, NumPy, pandas, Matplotlib)
+    - Aim of this workshop
+    - Why Python?
+    - Alternatives (R, Julia)
+    - Essential packages (IPython, NumPy, pandas, Matplotlib)
 1. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
 2. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
 3. [Pandas](https://cbrnr.quarto.pub/python-data-analysis-03/)
