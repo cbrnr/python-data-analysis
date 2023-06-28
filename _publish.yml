@@ -6,3 +6,7 @@
   quarto-pub:
     - id: 6f999cc8-82f7-4d05-928b-be0b494e880f
       url: 'https://cbrnr.quarto.pub/python-data-analysis-02'
+- source: pandas.qmd
+  quarto-pub:
+    - id: fcd9e1bb-6395-4c5f-8b6b-27f5eaeb373f
+      url: 'https://cbrnr.quarto.pub/python-data-analysis-03'

@@ -7,14 +7,7 @@
   - Essential packages (IPython, NumPy, pandas, Matplotlib)
 1. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
 2. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
-3. [Pandas](https://rpubs.com/cbrnr/python_pandas)
-  - Introduction
-  - Series
-  - Data frames
-  - Importing data
-  - Data wrangling
-  - Tidy data
-  - COVID-19 example
+3. [Pandas](https://cbrnr.quarto.pub/python-data-analysis-03/)
 4. Matplotlib
 
 ---

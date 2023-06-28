@@ -594,13 +594,13 @@ The `dropna()` method does *not* modify the original data frame by default (inst
 
 ### Arranging rows
 
-Another frequently used operation is sorting rows in a data frame according to values in one or more columns. The `sort_values()` method accomplishes this task, by default is arranges rows in ascending order. We can use this method to sort all flights from first to last scheduled departure time within the entire year as follows:
+Another frequently used operation is sorting rows in a data frame according to values in one or more columns. The `sort_values()` method accomplishes this task, and by default it arranges rows in ascending order. For example, we can use this method to sort all flights by scheduled departure time within the entire year as follows:
 
 ```{python}
 flights.sort_values(["month", "day", "sched_dep_time"])
 ```
 
-Which flights had the larges departure delay? To answer this question, we can sort by the `dep_delay` column in descending order (so that flights with the largest delays are on top):
+Which flights had the largest departure delay? To answer this question, we can sort by the `dep_delay` column in descending order (so that flights with the largest delays are on top):
 
 ```{python}
 flights.sort_values("dep_delay", ascending=False)
@@ -639,13 +639,13 @@ Or what about columns that contain the string `arr_`?
 flights.filter(regex="arr_")
 ```
 
-The next example selects all columns starting with `a`:
+The next example selects all columns starting with the letter "a":
 
 ```{python}
 flights.filter(regex="^a")
 ```
 
-Finally, we pick all columns ending with `time`:
+Finally, we pick all columns ending with the word "time":
 
 ```{python}
 flights.filter(regex="time$")
@@ -656,7 +656,7 @@ Regular expressions are a powerful way to describe text patterns. We do not have
 
 ### Creating new variables
 
-First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns we will add in this section.
+First, let's create a smaller data frame with only a few columns. This will make it easier to see the new columns that we will add in this section.
 
 ```{python}
 df = flights.filter(["dep_delay", "arr_delay", "distance", "air_time"])
@@ -664,7 +664,7 @@ df = flights.filter(["dep_delay", "arr_delay", "distance", "air_time"])
 
 Now imagine we wanted to add a new column containing the gained time of each flight, which can be computed as the difference between arrival delay and departure delay. If the gain is positive, the airplane was faster than planned and therefore gained time.
 
-Pandas offers the `assign()` method to compute new columns. Let's add a `gain` column we just discussed, and in addition let's also compute the average speed of each flight (in kilometers per hour) using the existing `air_time` and `distance` columns:
+Pandas offers the `assign()` method to compute new columns. Let's add the previously discussed `gain` column. In addition, let's also compute the average speed of each flight (in miles per hour) using the existing `air_time` and `distance` columns:
 
 ```{python}
 df.assign(
@@ -696,7 +696,7 @@ flights.filter(["dep_delay"]).agg("mean")
 Missing values are automatically removed before `agg()` calculates the summary statistic.
 
 :::{.callout-note}
-The first example `flights["dep_delay"].agg("mean")` returns a scalar, whereas the second example `flights.filter(["dep_delay"]).agg("mean")` returns the value inside a `pd.Series`. The reason for this difference is that the `filter()` method always returns a data frame, even if it consists of only one column. Indexing with square bracket notation returns a `pd.Series` if we are asking for only one column.
+The first example `flights["dep_delay"].agg("mean")` returns a scalar, whereas the second example `flights.filter(["dep_delay"]).agg("mean")` returns the value inside a `pd.Series`. The reason for this difference is that the `filter()` method always returns a data frame, even if it consists of only one column. Aggregating columns of a data frame results in a series (of aggregated values). Indexing with square bracket notation returns a `pd.Series` if we are asking for only one column. Aggregating a series results in a value.
 :::
 
 We can even compute several summary statistics simulteneously by passing a list of functions:
@@ -717,9 +717,11 @@ We could also provide our own function:
 flights["dep_delay"].agg(lambda x: sum(x.dropna()) / len(x.dropna()))
 ```
 
+:::{.callout-note}
 For even moderately complex functions, lambda functions tend to get unreadable, so you should prefer a regular (named) function instead.
+:::
 
-Things get more interesting when we group the data first and aggregate within each group individually. The `groupby()` data frame method groups the data into groups based on one or more columns. For example, we can group by month and day to calculate the mean departure delay on each single day:
+Things get more interesting when we group the data first and aggregate within each group individually. The `groupby()` data frame method splits the data into groups based on one or more columns. For example, we can group by month and day to calculate the mean departure delay on each single day:
 
 ```{python}
 flights.groupby(["month", "day"])["dep_delay"].agg("mean")
@@ -950,7 +952,7 @@ tidy2
 
 ## COVID-19 example
 
-Let's apply some of the things we learned in this chapter to a real-world data set: official COVID-19 cases in Austria. The data is available as a text file [here](https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv) (updated daily), and a snapshot from June 15 2022 (renamed to `covid19.csv`) is located in the working directory.
+Let's apply some of the things we learned in this chapter to a real-world data set: official COVID-19 cases in Austria. The data is available as a text file [here](https://covid19-dashboard.ages.at/data/CovidFaelle_Timeline.csv) (updated daily), and a snapshot from June 28 2023 (renamed to `covid19.csv`) is located in the working directory.
 
 Using `pd.read_csv()`, we can import this file as follows:
 
@@ -978,7 +980,7 @@ covid19.info()
 
 There are many interesting questions we could try to answer with this data set. Let's highlight a few simple ones that each introduce a new feature that we have not seen before.
 
-First, because COVID-19 infections heavily depend on the seasons, we could be interested in average daily new cases per month. A datetime series exposes specialized method in its `dt` method namespace. Here, we use `dt.month` to extract the month of the year (1–12) and add this information as a new column `month`. Then we group by `month` and compute the average in each group:
+First, because COVID-19 infections heavily depend on the seasons, we could be interested in average daily new cases per month. A datetime series exposes specialized methods in its `dt` method namespace. Here, we use `dt.month` to extract the month of the year (1–12) and add this information as a new column `month`. Then we group by `month` and compute the average in each group:
 
 ```{python}
 (covid19
@@ -1009,7 +1011,7 @@ Let's combine these two separate analyses and calculate the average number of ca
 )
 ```
 
-Finally, we can also create plots directly from data frames and/or single columns. That way, we can recreate the famous time course of daily COVID-19 infections over the whole time period. We will plot the daily values for Austria with "Time" on the *x*-axis and new cases on the *y*-axis:
+Finally, we can also create plots directly from data frames and/or single columns. That way, we can recreate the famous time course of daily COVID-19 infections over the whole time period. We will plot the daily values for Austria with time on the *x*-axis and new cases on the *y*-axis:
 
 ```{python}
 #| eval: false
