@@ -64,7 +64,7 @@ The shorthand notations `int`, `uint`, `float`, and `complex` map to `int64`, `u
 pd.Series([1, 2, 3], dtype="int")
 pd.Series([1, 2, 3], dtype="uint8")
 pd.Series([1, 2, 3], dtype="float32")
-pd.Series([1, 2, 3], dtype="complex256")
+pd.Series([1, 2, 3], dtype="complex128")
 ```
 
 Strings are stored as `object` series by default (`object` is the base type in Python which every other type derives from – so everything is an `object`, including strings).
