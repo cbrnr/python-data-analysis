@@ -2,7 +2,7 @@
 title: "IPython"
 subtitle: "An enhanced interactive Python interpreter"
 author: "Clemens Brunner"
-date: 2023-07-03
+date: 2024-04-03
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Running `python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as Terminal on macOS and Command Prompt or PowerShell on Windows) invokes the *interactive* Python interpreter. This mode is especially useful for interactively playing around with data using a workflow called read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)): Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
+Running `python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as Terminal on macOS or Windows Terminal on Windows) invokes the *interactive* Python interpreter. This interpreter mode is especially useful for interactively playing around with data using a workflow called read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)): Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
 
 Here's an example. After starting the interactive Python interpreter, we are presented with a prompt that looks like this:
 
@@ -77,28 +77,32 @@ IPython offers many useful keyboard shortcuts that can significantly speed up an
 - <kbd>Ctrl</kbd><kbd>c</kbd> deletes the current input and also interrupts any running operation.
 - <kbd>Ctrl</kbd><kbd>l</kbd> clears the screen.
 
+:::{.callout-note}
+Some of these shortcuts are also available in the regular interactive Python interpreter.
+:::
+
 
 ## Magic commands
 
 Magic commands are special IPython commands that provide functionality such as printing or changing the working directory. Normally, magic commands start with a `%` character, but by default they are also available without this prefix (unless a Python object with the same name exists). Here are some frequently used magic commands (a full list is available [here](https://ipython.readthedocs.io/en/stable/interactive/magics.html)):
 
 - `%cd <some_directory>` changes the working directory to `<some_directory>`.
+- `%pwd` prints the current working directory.
+- `%ls` lists the contents of the current working directory.
 - `%history` prints the (input) history.
 - `%matplotlib` enables interactive Matplotlib plotting (which means that plots are immediately shown and do not block the REPL).
 - `%paste` pastes text (code) from the clipboard.
-- `%pwd` prints the current working directory.
-- `%ls` lists the contents of the current working directory.
 - `%run <script.py>` runs the entire script `<script.py>` in the current interactive session.
 - `%timeit <statement>` times the execution of a statement.
 
-:::{.callout-note}
-Magic commands are not valid Python commands. Therefore, they should not be used in a Python script.
+:::{.callout-important}
+Magic commands are *not* valid Python commands. Therefore, they should not be used in a Python script.
 :::
 
 
 ## Shell commands
 
-It is often useful to run commands directly in the underlying shell. This can be achieved in IPython by prefixing a shell command with a `!` (bang). Here are some examples that work on macOS and Linux (but not on Windows):
+It is often useful to run commands directly in the underlying shell. This can be achieved in IPython by prefixing a shell command with a `!` (bang). Here are some examples that work on macOS and Linux (but not on Windows, which uses different shell commands):
 
 - `!ls` lists the contents of the working directory.
 - `!less <some_file.txt>` shows the contents of the file `<some_file.txt>`.
@@ -127,7 +131,7 @@ IPython includes support for web-based documents for [literate programming](http
 
 [Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents. Another nice feature of Quarto is that it supports languages other than Python, for example R and Julia.
 
-We will not cover any of these notebook-like tools in this course, but it is good to know that they exist (so you know where to start). By the way, the course material you are reading right now is written with Quarto, and if you are interested you can take a look at the source to find out how it works.
+We will not cover any of these notebook-like tools in this course, but it is good to know that they exist (so you know where to start). By the way, the course material you are reading right now is written with Quarto, and if you are interested, you can take a look at the [source](ipython.qmd) to find out how it works.
 
 ---
 

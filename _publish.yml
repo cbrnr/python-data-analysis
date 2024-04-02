@@ -10,3 +10,7 @@
   quarto-pub:
     - id: fcd9e1bb-6395-4c5f-8b6b-27f5eaeb373f
       url: 'https://cbrnr.quarto.pub/python-data-analysis-03'
+- source: matplotlib.qmd
+  quarto-pub:
+    - id: 325f9149-902d-49b2-81fa-550bf314e39e
+      url: 'https://cbrnr.quarto.pub/python-data-analysis-04'

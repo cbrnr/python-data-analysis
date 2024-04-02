@@ -2,7 +2,7 @@
 title: "NumPy"
 subtitle: "Basic building blocks and operations"
 author: "Clemens Brunner"
-date: 2023-07-03
+date: 2024-04-03
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Python has not been designed with number crunching in mind. In fact, if you try to use lists for numeric computing, you will soon notice several caveats:
+Python has not been designed with number crunching in mind. In fact, if you try to use built-in lists for numeric computing, you will soon notice several caveats:
 
 -   Operations with lists are slow
 -   Lists do not store numeric data efficiently
@@ -50,11 +50,9 @@ Although this works, it is quite a lot to type for such a (seemingly) basic oper
 list(map(lambda x: x + 1, x))
 ```
 
-In summary, these examples show that because lists are general-purpose containers, they are not suitable for numeric computations. List operations are also pretty slow when compared to numeric arrays in other programming languages (such as C, Fortran, or Julia). Finally, lists use a lot of memory compared to numeric arrays in other languages.
-
 Even though the `array` module in the standard library features an `array` data type (which stores elements of the same type much more efficiently than lists), elementwise operations with a simple syntax are still not supported.
 
-[NumPy](https://numpy.org/) solves all of these issues. The importance of this third-party package cannot be understated: without NumPy, Python would not be one of the most popular programming language for data science. Many scientific packages like [SciPy](https://scipy.org/), [Pandas](https://pandas.pydata.org/), and [Scikit-Learn](https://scikit-learn.org/stable/) rely on NumPy under the hood, so it makes sense to learn the basics even if you do not plan to work with NumPy directly. This is the goal of this chapter.
+[NumPy](https://numpy.org/) solves all of these issues. The importance of this third-party package cannot be understated: without NumPy, Python would not be one of the most popular programming language for data science today. Many scientific packages like [SciPy](https://scipy.org/), [pandas](https://pandas.pydata.org/), and [Scikit-Learn](https://scikit-learn.org/stable/) rely on NumPy under the hood, so it makes sense to learn the basics even if you do not plan to work with NumPy directly. This is the goal of this chapter.
 
 
 ## The *n*-dimensional array
@@ -67,9 +65,9 @@ x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 x + 1
 ```
 
-Voilà! We added 1 to each element in the array by just typing `x + 1` -- no list comprehensions, lambda functions, or other gymnastics necessary.
+Voilà! We added 1 to each element in the array by just typing `x + 1` -- no list comprehensions, lambda functions, or other gymnastics required!
 
-Of course, this does not work out of the box and we need to import NumPy before we can use it. By convention, this is done by `import numpy as np`.
+Of course, this does not work out of the box, because we need to import NumPy before we can use it. By convention, this is done by `import numpy as np`.
 
 The foundation of NumPy is the *n*-dimensional homogeneous array (or short ndarray or just array). This data type is a highly efficient container for homogeneous data, which means that all elements must be of the same type (typically, elements are numeric types such as integers or floats). The data is also structured into dimensions (also called axes), so an array can be one-dimensional, two-dimensional, three-dimensional, and so on (*n*-dimensional in general).
 
@@ -81,7 +79,7 @@ type(x)
 
 Alright, so this is an object of type `numpy.ndarray` -- a NumPy array!
 
-Each object of type `numpy.ndarray` (short ndarray) has a `dtype` attribute, which indicates the data type of its elements. In our example, all elements are integers (represented by 64 bits):
+Each object of type `numpy.ndarray` has a `dtype` attribute, which indicates the data type of its elements. In our example, all items are integers (represented by 64 bits):
 
 ```{python}
 x.dtype
@@ -95,11 +93,16 @@ x.shape
 
 Indeed, `x` has only one dimension containing 10 elements.
 
+:::{.callout-note}
+The `shape` attribute is always a tuple, even if the array has only one dimension. In this case, the tuple contains only one element, which specifies the number of items in that dimension.
+:::
+
 In addition to `dtype` and `shape`, the following attributes are also available:
 
--   `ndim` contains the number of dimensions (axes) (this is equal to the length of the `shape` tuple)
--   `size` contains the total number of elements in the array (this is equal to the product of the individual `shape` elements)
--   `itemsize` contains the size of one element in bytes (this is normally apparent from the `dtype`, for example `int64` means that one element occupies 64 bits, which corresponds to 8 bytes)
+- `ndim` contains the number of dimensions (axes) (this is equal to the length of the `shape` tuple)
+- `size` contains the total number of elements in the array (this is equal to the product of the individual `shape` elements)
+- `itemsize` contains the size of one element in bytes (this is normally apparent from the `dtype`, for example `int64` means that one element occupies 64 bits, which corresponds to 8 bytes)
+- `nbytes` contains the total size of the array in bytes (this is equal to `size * itemsize`)
 
 These are the attributes for our example array `x`:
 
@@ -107,6 +110,7 @@ These are the attributes for our example array `x`:
 x.ndim
 x.size
 x.itemsize
+x.nbytes
 ```
 
 
@@ -137,7 +141,7 @@ y.shape
 In other words, the first dimension contains five elements, and the second dimension contains two elements.
 
 :::{.callout-tip}
-In any *n*-dimensional array, the *last* dimension can be interpreted as *columns*, and the *second last* dimension corresponds to *rows*.
+In any *n*-dimensional array with at least two dimensions, the *last two* dimensions can be interpreted as *rows*  and *columns*, respectively.
 :::
 
 More deeply nested lists are mapped to additional dimensions. Here's a three-dimensional array:
@@ -167,6 +171,7 @@ We can also create arrays consisting of floating point numbers, for example:
 
 ```{python}
 f = np.array([[1.1, 5.2, -8.3], [-4.4, 15.5, 9.6]])
+f
 f.dtype
 ```
 
@@ -188,7 +193,7 @@ Besides the standard Python data types `int` and `float`, [more specific types](
 
 ### Number ranges
 
-The `np.arange()` function creates an array with equally-spaced numbers:
+The `np.arange()` function creates a one-dimensional array with equally-spaced numbers:
 
 ```{python}
 np.arange(10)
@@ -200,13 +205,22 @@ The function accepts custom values for the start, end, and step size of the sequ
 np.arange(start=3, stop=11, step=0.8)
 ```
 
+:::{.callout-note}
+The stop value is *exclusive*, so the sequence will end before reaching this value.
+:::
+
 If you need a specific number of equally-spaced values within a given range, `np.linspace()` and `np.logspace()` are useful. For example, the following command creates an array with eight equally-spaced values between 13 and 14:
 
 ```{python}
 np.linspace(start=13, stop=14, num=8)
 ```
 
-The `np.linspace()` and `np.logspace()` functions can be helpful when you want to evaluate a function at many points. The following example plots a complete period of a sine using 100 equally-spaced points:
+:::{.callout-note}
+Here, the stop value is *inclusive*, so the sequence will end at this value.
+:::
+
+:::{.callout-tip}
+The `np.linspace()` function is helpful when you want to evaluate a function at many points. The following example plots a complete period of a sine using 100 equally-spaced points:
 
 ```{python}
 #| eval: false
@@ -242,6 +256,7 @@ plt.show()
 ```
 
 Note that we use [Matplotlib](https://matplotlib.org/) to plot the sine function values for these 100 points with a line graph, but don't worry too much about the plot right now. We will discuss Matplotlib in more detail later.
+:::
 
 Next, let's create a logarithmically-spaced array with 16 numbers ranging from 10^-1^ to 10^7^:
 
@@ -254,7 +269,7 @@ Note how numbers are automatically displayed in [scientific notation](https://en
 
 ### Filled arrays
 
-Sometimes, it is necessary to create an array consisting of all zeros, ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
+Sometimes, it is necessary to create an array consisting of all zeros, all ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
 
 ```{python}
 np.zeros((2, 3))  # 2 rows, 3 columns
@@ -263,7 +278,7 @@ np.zeros((2, 3))  # 2 rows, 3 columns
 :::{.callout-note}
 In the previous example, we passed the tuple `(2, 3)` as the first argument to create the desired array. To prevent Python from interpreting these numbers as separate arguments, it is necessary to enclose this tuple within parentheses. In other words, `np.zeros(2, 3)` does *not* work! To make it really explicit, we can use a keyword argument in our function call:
 
-```{python}
+```python
 np.zeros(shape=(2, 3))
 ```
 :::
@@ -280,7 +295,7 @@ Creating an array with all ones works similarly:
 np.ones((3, 3))
 ```
 
-Next, we create an array filled with `61`:
+Next, we create an array filled with the number `61`:
 
 ```{python}
 np.full((2, 2), 61)
@@ -294,7 +309,7 @@ np.empty((4, 3))
 
 Note that those values are arbitrary and might be different on your computer, so we have to make sure to populate the array later with the desired values.
 
-Finally, `np.eye()` is a nice shortcut to create a square "identity" array (with ones on the diagonal and zeros elsewhere):
+Finally, `np.eye()` is a nice shortcut to create a square two-dimensional "identity" array (with ones on the diagonal and zeros elsewhere):
 
 ```{python}
 np.eye(5)
@@ -303,14 +318,14 @@ np.eye(5)
 
 ### Random numbers
 
-The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same random numbers every time we run our code. This is important for reproducible results.
+The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of probability distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same random numbers every time we run our code. This is important for reproducible results.
 
 ```{python}
 from numpy.random import default_rng
 
 rng = default_rng(42)
-x1 = rng.standard_normal(10)
-x2 = rng.uniform(size=(2, 2))
+x1 = rng.standard_normal(size=10)
+x2 = rng.uniform(size=(2, 3))
 x3 = rng.integers(low=-3, high=99, size=(2, 5))
 ```
 
@@ -323,7 +338,7 @@ x3
 
 ## Shape and reshape
 
-Every array has a certain shape, which determines how its values are structured. The desired shape can be passed as an argument when creating an array, but it can also be changed later on. The `shape` attribute of an array returns the current shape as a tuple, listing the number of elements in every dimension.
+Every array has a certain shape, which determines how its values are structured into dimensions. The desired shape can be passed as an argument when creating an array, but it can also be changed later on. The `shape` attribute of an array returns the current shape as a tuple, listing the number of elements in each dimension.
 
 We already saw how we can create various arrays with different shapes using the `shape` argument:
 
@@ -334,7 +349,7 @@ np.full(shape=(2, 4), fill_value=2)
 np.empty(shape=(2, 3))
 ```
 
-Functions that create arrays with random numbers use the `size` argument to specify the desired shape (in the following examples we are reusing the `rng` generator created in the previous section).
+Functions that create arrays with random numbers use the `size` argument to specify the desired shape (in the following examples, we are re-using the `rng` generator created in the previous section):
 
 ```{python}
 rng.standard_normal(size=(2, 5))
@@ -346,7 +361,7 @@ However, we can always change the current shape of an array to a new *compatible
 
 There are three main ways to change the shape of an array:
 
-1.  Assign a new shape to the `shape` attribute
+1.  Assign a new value (tuple) to the `shape` attribute
 2.  Use the `resize()` method
 3.  Use the `reshape()` method
 
@@ -397,14 +412,14 @@ x.reshape((6, -1))  # -1 is inferred to mean 2 here
 
 ## Indexing and slicing
 
-We can pull out one or more elements of an array using indexing and slicing. This works very similar to lists, at least for one-dimensional arrays. Let's start with a simple one-dimensional array:
+We can pull out one or more items of an array using indexing and slicing. This works very similar to lists, at least for one-dimensional arrays. Let's start with a simple one-dimensional array:
 
 ```{python}
 x = np.arange(3, 19, 2, dtype=np.int64)
 x
 ```
 
-Python uses zero-based indexing, so the first element is given by:
+Python uses zero-based indexing, so the first item is given by:
 
 ```{python}
 x[0]
@@ -416,13 +431,13 @@ Similarly, we can index other positions of the array:
 x[2]
 ```
 
-Negative indexes count from the end of the array, so the last element is:
+Negative indexes count from the end of the array, so the last item is:
 
 ```{python}
 x[-1]
 ```
 
-Slices pull out multiple elements with the `:` operator to indicate the desired range (and an optional step size). Note that the stop index is exclusive.
+Slices pull out multiple elements with the `:` operator to indicate the desired range (and an optional step size). Note that the stop index is *exclusive*.
 
 ```{python}
 x[1:5]  # start and stop
@@ -495,7 +510,7 @@ x
 
 ### Elementwise operations
 
-As a general rule, NumPy carries out operations elementwise. If two arrays have the same shape, this is pretty straightforward:
+As a general rule, NumPy carries out operations elementwise. If two arrays have identical shapes, this is pretty straightforward:
 
 ```{python}
 x = np.arange(1, 7).reshape((2, 3))
@@ -517,7 +532,7 @@ Whenever possible, avoid loops over arrays. Loops are very slow and inefficient 
 
 ### Vector and matrix operations
 
-Note that NumPy does not attach special meaning to 1D or 2D arrays. A 1D array is not interpreted as a vector, and similarly, a 2D array is not interpreted as a matrix. However, it is of course possible to perform vector and matrix operations with special notation. Specifically, the [dot product](https://en.wikipedia.org/wiki/Dot_product) between two vectors can be computed with the `@` operator:
+Note that NumPy does not attach special meanings to 1D or 2D arrays. A 1D array is not interpreted as a vector, and similarly, a 2D array is not interpreted as a matrix. However, it is of course possible to perform vector and matrix operations with special notation. Specifically, the [dot product](https://en.wikipedia.org/wiki/Dot_product) between two vectors can be computed with the `@` operator:
 
 ```{python}
 a = np.array([1, 2, 3])
@@ -586,7 +601,7 @@ np.sqrt(x)
 
 ## Broadcasting
 
-Even when two array shapes are different, calculations still work if certain conditions are met. The rules for this so-called *broadcasting* are:
+Even when two array shapes are different, calculations still work if certain conditions are met (meaning that their shapes are compatible). The rules for this so-called *broadcasting* are:
 
 1.  If two arrays have different shapes, the array with fewer dimensions will automatically get new dimensions with size 1 on the left until it matches the number of the larger array.
 2.  Elements in dimensions with size 1 are automatically repeated to match the size of the largest array in that dimension.
