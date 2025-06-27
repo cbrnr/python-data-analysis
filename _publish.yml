@@ -1,16 +1,16 @@
 - source: ipython.qmd
   quarto-pub:
     - id: 2fef694e-5900-4d6e-9db1-62d79f32945c
-      url: 'https://cbrnr.quarto.pub/python-data-analysis-01'
+      url: https://cbrnr.quarto.pub/python-data-analysis-01
 - source: numpy.qmd
   quarto-pub:
     - id: 6f999cc8-82f7-4d05-928b-be0b494e880f
-      url: 'https://cbrnr.quarto.pub/python-data-analysis-02'
+      url: https://cbrnr.quarto.pub/python-data-analysis-02
 - source: pandas.qmd
   quarto-pub:
     - id: fcd9e1bb-6395-4c5f-8b6b-27f5eaeb373f
-      url: 'https://cbrnr.quarto.pub/python-data-analysis-03'
+      url: https://cbrnr.quarto.pub/python-data-analysis-03
 - source: matplotlib.qmd
   quarto-pub:
     - id: 325f9149-902d-49b2-81fa-550bf314e39e
-      url: 'https://cbrnr.quarto.pub/python-data-analysis-04'
+      url: https://cbrnr.quarto.pub/python-data-analysis-04

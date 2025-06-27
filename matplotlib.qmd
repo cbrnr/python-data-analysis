@@ -2,7 +2,7 @@
 title: "Matplotlib"
 subtitle: "Data wrangling essentials"
 author: "Clemens Brunner"
-date: 2024-04-03
+date: 2025-06-30
 format: html
 toc: true
 toc-title: ""
@@ -16,17 +16,48 @@ theme:
 
 ## Introduction
 
-In the previous chapter, we used pandas to quickly visualize data contained in a data frame column. This is very convenient, but limited to a few commonly used visualization types like line charts, bar chars, scatter plots, and histograms. We will take a look at these plots in the first part of this chapter.
+In the previous chapter, we used pandas to quickly visualize data contained in a data frame column. This is very convenient, but limited to a few commonly used visualization types like line charts, bar chars, scatter plots, and histograms (see the [official documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html) for more details).
 
 [Matplotlib](https://matplotlib.org) is one of the most important visualization packages for Python. It can create almost any type of visualization, with tons of customization options to make the plot look just the way you want. In fact, plots created with pandas use Matplotlib under the hood.
 
-## Creating plots with pandas
 
-[Official documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html)
+## Matplotlib
 
-## Plotting with Matplotlib
+Matplotlib is particularly well-suited for creating a wide variety of plots, especially for scientific purposes. The data to be visualized is typically stored in NumPy arrays.
 
-[Official documentation](https://matplotlib.org/stable/users/explain/quick_start.html)
+:::{.callout-note}
+The official Matplotlib website offers several [tutorials](https://matplotlib.org/stable/tutorials/index.html). In particular, the [Quick Start Guide](https://matplotlib.org/stable/tutorials/introductory/quick_start.html) is a good complement to the material covered in this chapter.
+:::
+
+As always, we start with the necessary imports:
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+Note that we import `matplotlib.pyplot as plt` and not `matplotlib` directly, because the vast majority of functions for creating plots are located in the `matplotlib.pyplot` subpackage.
+
+:::{.callout-important}
+Plots created with Matplotlib are *not* displayed by default. To display a plot in a separate window, you must explicitly run the following command:
+
+```python
+plt.show()
+```
+
+However, this window blocks the Python interpreter, i.e., you cannot enter any further commands as long as the graphics window is open. To avoid this behavior, you can enter the following command in the interactive Python interpreter directly after importing:
+
+```python
+plt.ion()
+```
+
+This command ensures that plots are displayed immediately after they are created ("ion" stands for "interactive on"). Note that scripts should not use this command, as it can lead to unexpected behavior.
+:::
+
+
+### Creating plots
+
+Before we start creating plots with Matplotlib, it is helpful to familiarize ourselves with some basic concepts and the structure of a plot, as illustrated in the following figure (modified from [here](https://matplotlib.org/stable/gallery/showcase/anatomy.html)):
 
 ```{python}
 #| echo: false
@@ -141,8 +172,251 @@ annotate(0.65, 0.01, "x Axis", "ax.xaxis")
 annotate(0, 0.36, "y Axis", "ax.yaxis")
 annotate(4.0, 0.7, "Spine", "ax.spines")
 
-_ = fig.patch.set(linewidth=1, edgecolor="0.5")
-plt.show()
+_ = fig.patch.set(linewidth=2, edgecolor="0.5")
+```
+
+This figure shows the most important components of a Matplotlib plot, but we only need two concepts to get started: `Figure` and `Axes` (highlighted in red). A `Figure` corresponds to the entire figure area, which can contain one or more plots (so-called `Axes`).
+
+The `plt.subplots` function creates an empty `Figure` containing one empty `Axes` object by default:
+
+```{python}
+fig, ax = plt.subplots()
+```
+
+The function returns both the `Figure` and the `Axes` objects (we call them `fig` and `ax`). We can now call methods of the `Axes` object (which we named `ax`) to create the desired plot (more on this in the next section).
+
+If we want to combine multiple plots in a single figure, we can again use `plt.subplots` to create a `Figure` with the desired number of `Axes`. To do this, we use the first and second arguments, which correspond to the number of rows and columns of the plots, respectively:
+
+```python
+fig, axes = plt.subplots(1, 3)  # 1 row, 3 columns
+```
+
+```{python}
+#| echo: false
+fig, axes = plt.subplots(1, 3, figsize=(9, 4))
+```
+
+This example creates a `Figure` containing three `Axes` arranged in one row and three columns. We named this collection of three `Axes` objects `axes`, which is a one-dimensional NumPy array. Therefore, we can access the individual elements using `axes[0]`, `axes[1]`, and `axes[2]` to create the desired plots.
+
+We can also generate a two-dimensional arrangements consisting of multiple rows and columns. In this case, the returned axes are available in a *two-dimensional* NumPy array. Therefore, we need to extract the individual `Axes` objects with a two-dimensional index (i.e., row and column). For example, `axes[0, 2]` would be the `Axes` object in row 0 (i.e., the first row) and column 2 (i.e., the third column).
+
+To avoid any overlap in a `Figure` with multiple `Axes` objects, it is recommended to run the following line after all plots have been created:
+
+```python
+fig.set_tight_layout(True)
+```
+
+This will adjust the spacing between the `Axes` objects so that no text or other elements are cut off or overlap. Let's look at an example. First, we create a figure with two rows and three columns:
+
+```{python}
+fig, axes = plt.subplots(2, 3)
+```
+
+And this is the figure using the optimized layout:
+
+```{python}
+fig, axes = plt.subplots(2, 3)
+fig.set_tight_layout(True)
+```
+
+
+### Line plots
+
+Matplotlib supports many different [plot types](https://matplotlib.org/stable/plot_types/index.html). First, let's look at line plots, which are useful for displaying time series data. We use the following example data `x` and `y`:
+
+```{python}
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+```
+
+To create a line plot, we call the `plot` method and pass the data for the x- and y-axes:
+
+```python
+fig, ax = plt.subplots()
+ax.plot(x, y)
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+_ = ax.plot(x, y)
+```
+
+
+### Scatter plots
+
+To create a scatter plot, we use the `scatter` method, which provides sensible default values for this type of plot:
+
+```{python}
+fig, ax = plt.subplots()
+ax.scatter(x, y)
+```
+
+
+### Bar charts and stem plots
+
+For a bar chart, we need the heights of the individual bars as well as the positions of the bars on the x-axis:
+
+```{python}
+x = np.arange(8)
+y = [17, 5, 23, 33, 12, 21, 27, 18]
+```
+
+We can then display these values with the `bar` method:
+
+```{python}
+fig, ax = plt.subplots()
+ax.bar(x, y)
+```
+
+Alternatively, we could also visualize these values as a stem plot:
+
+```{python}
+fig, ax = plt.subplots()
+ax.stem(x, y)
+```
+
+
+### Histograms
+
+Matplotlib also supports more complex statistical plots like histograms. To create a histogram, we first generate new example data `x` (10,000 normally distributed random numbers with a mean of 100 and a standard deviation of 15):
+
+```{python}
+from numpy.random import default_rng
+
+rng = default_rng(1)
+x = rng.normal(loc=100, scale=15, size=10000)
+```
+
+We can now display the distribution of `x` as a histogram:
+
+```python
+fig, ax = plt.subplots()
+ax.hist(x, bins=50, edgecolor="white")
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+_ = ax.hist(x, bins=50, edgecolor="white")
+```
+
+In this example, we manually set the number of bins to 50. We also use a white edge color to better separate the individual bars.
+
+:::{.callout-tip}
+All plotting methods (e.g., `plot`, `scatter`, `bar`, `stem`) have optional arguments that allow us to customize the appearance of the plot. These are described in the respective documentations.
+:::
+
+
+### Boxplots
+
+Boxplots are also used to visualize the distribution of one or more variables. Let's create the following three example arrays:
+
+```{python}
+x = rng.normal(loc=0, scale=5, size=10000)
+y = rng.exponential(5, size=10000)
+z = rng.poisson(2.8, size=10000)
+```
+
+We can visualize the distributions of the three variables with three boxplots:
+
+```python
+fig, ax = plt.subplots()
+ax.boxplot([x, y, z])
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+_ = ax.boxplot([x, y, z])
+```
+
+:::{.callout-note}
+A boxplot displays the distribution of a dataset based on its quartiles. The box spans from the first quartile (Q1) to the third quartile (Q3), so its height (in a vertical boxplot) represents the interquartile range (IQR) – the middle 50% of the data. The horizontal line inside the box marks the median (Q2).
+
+The whiskers extend from the edges of the box to the most extreme data points that are within 1.5 times the IQR from the quartiles:
+
+- The lower whisker reaches down to the smallest value that is greater than or equal to Q1 − 1.5 × IQR.
+- The upper whisker extends up to the largest value that is less than or equal to Q3 + 1.5 × IQR.
+
+Any data points beyond these limits are shown individually and are considered outliers.
+:::
+
+
+### Violin plots
+
+Violin plots can be used as an alternative to boxplots. For example, the data from the previous section could also be visualized like this:
+
+```python
+fig, ax = plt.subplots()
+ax.violinplot([x, y, z])
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+_ = ax.violinplot([x, y, z])
+```
+
+
+### Additional plot types
+
+Matplotlib supports many other plot types, such as pie charts, contour plots, and 3D plots. However, if you want to create scatter plots with overlaid regression lines or other more complex statistical plot types, you should take a look at more specialized packages like seaborn. While it is theoretically possible to create these types of plots with Matplotlib, it would require many manual steps (e.g., you would have to fit a linear regression model to the data before including it in a plot). Seaborn automates these steps and provides sensible defaults for many common plot types.
+
+
+### Title and axis labels
+
+By default, Matplotlib does not add titles or axis labels to the plots. However, you can customize an existing plot with specific methods. Let's take the very first plot we created in this chapter as an example:
+
+```python
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+fig, ax = plt.subplots()
+ax.plot(x, y)
+```
+
+```{python}
+#| echo: false
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+
+fig, ax = plt.subplots()
+_ = ax.plot(x, y)
+```
+
+We can add a title and axis labels to this plot as follows:
+
+```python
+fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.set_title("Sine")
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Amplitude (V)")
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.set_title("Sine")
+ax.set_xlabel("Time (s)")
+_ = ax.set_ylabel("Amplitude (V)")
+```
+
+Alternatively, instead of using the three separate methods, you could also use the following shorter version:
+
+```python
+fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.set(title="Sine", xlabel="Time (s)", ylabel="Amplitude (V)")
+```
+
+```{python}
+#| echo: false
+fig, ax = plt.subplots()
+ax.plot(x, y)
+_ = ax.set(title="Sine", xlabel="Time (s)", ylabel="Amplitude (V)")
 ```
 
 ---
