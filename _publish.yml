@@ -14,3 +14,7 @@
   quarto-pub:
     - id: 325f9149-902d-49b2-81fa-550bf314e39e
       url: https://cbrnr.quarto.pub/python-data-analysis-04
+- source: python.qmd
+  quarto-pub:
+    - id: 5c0d7102-687f-41ef-a69a-1a9be9f5c25f
+      url: https://cbrnr.quarto.pub/python-data-analysis-00
