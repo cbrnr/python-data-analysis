@@ -1,6 +1,6 @@
 # Data Analysis with Python
 
-0. [Setting up Python](https://cbrnr.quarto.pub/python-data-analysis-00/)
+0. [Installing Python](https://cbrnr.quarto.pub/python-data-analysis-00/)
 1. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
 2. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
 3. [Pandas](https://cbrnr.quarto.pub/python-data-analysis-03/)
