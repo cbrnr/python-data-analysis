@@ -1,17 +1,10 @@
 # Data Analysis with Python
 
-0. Introduction
-    - Aim of this workshop
-    - Why Python?
-    - Alternatives (R, Julia, Polars)
-1. Python environment
-    - Installation
-    - Virtual environments
-    - Essential packages (IPython, NumPy, pandas, Matplotlib)
-2. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
-3. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
-4. [Pandas](https://cbrnr.quarto.pub/python-data-analysis-03/)
-5. [Matplotlib](https://cbrnr.quarto.pub/python-data-analysis-04/)
+0. [Setting up Python](https://cbrnr.quarto.pub/python-data-analysis-00/)
+1. [IPython](https://cbrnr.quarto.pub/python-data-analysis-01/)
+2. [NumPy](https://cbrnr.quarto.pub/python-data-analysis-02/)
+3. [Pandas](https://cbrnr.quarto.pub/python-data-analysis-03/)
+4. [Matplotlib](https://cbrnr.quarto.pub/python-data-analysis-04/)
 
 ---
 

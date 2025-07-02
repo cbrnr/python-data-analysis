@@ -36,9 +36,13 @@ All of this is already built into the standard Python interpreter. However, the 
 
 ## First steps
 
-Before we can use IPython, we need to install it, for example via `pip install ipython`. This adds a new command `ipython` to our path, which we can use to start the enhanced interactive interpreter. Basically, instead of typing `python` in the command line, we can now run `ipython`.
+If you are using uv to manage your Python projects, you can simply start IPython in your project directory by running the following command in your terminal:
 
-The prompt looks a little different from the regular one:
+```bash
+uv run --with ipython ipython
+```
+
+The prompt looks a little different from the one in the standard Python interpreter:
 
 ```
 In [1]:
