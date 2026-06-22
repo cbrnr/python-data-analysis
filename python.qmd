@@ -1,8 +1,8 @@
 ---
 title: "Installing Python"
-subtitle: "A beginner's guide for reproducible Python projects"
+subtitle: "A Beginner's Guide for Reproducible Python Projects"
 author: "Clemens Brunner"
-date: 2025-07-02
+date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Setting up and managing a Python project has traditionally been a rather tedious and complicated task. Fortunately, the [uv](https://docs.astral.sh/uv/) package and project manager solves many of these problems, making it very easy to create a fully reproducible Python environment.
+Setting up and managing a Python project has historically been a rather tedious and complicated task. Fortunately, the [uv](https://docs.astral.sh/uv/) package and project manager solves many of these problems, making it very easy to create a fully reproducible Python environment.
 
 This short beginner's guide will walk you through the essentials – from installing uv to running a Python script. The goal is to help you get started quickly, but since uv is a powerful tool, be sure to check out the [official documentation](https://docs.astral.sh/uv/) for more advanced features and options.
 
@@ -41,33 +41,33 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 On Windows, make sure to use *PowerShell* rather than *Command Prompt* in your terminal. If you are running a recent version of Windows, you can simply launch the *Windows Terminal* app, which uses PowerShell by default (if you don't have Windows Terminal, you can install it from the Microsoft Store). On macOS, you can use the *Terminal* app, and on Linux, you can use any terminal emulator of your choice.
 :::
 
-This will install uv in your home directory (just for your user) and add it to your path. Make sure to restart your terminal after the installation is complete. To verify that uv is installed correctly, run the following command:
+This will install uv in your home directory (just for your user) and add it to the path. Make sure to restart your terminal after the installation is complete. To verify that uv is installed correctly, run the following command:
 
 ```bash
 uv --version
 ```
 
-This should print the version of uv. If you get an error message, something went wrong during the installation. In that case, please refer to the [documentation](https://docs.astral.sh/uv/) for troubleshooting.
+This should print the version of uv (for example, `0.11.22`). If you get an error message, something went wrong during the installation. In that case, please refer to the [documentation](https://docs.astral.sh/uv/) for troubleshooting.
 
 
 ## Creating a new project
 
-To create a new Python project, change to the directory where you want to create the project and run the following command in your terminal:
+To create a new Python project, change to the directory where you want to create the project (using `cd`) and run the following command in your terminal:
 
 ```bash
 uv init my-project
 ```
 
-This will create a new directory called `my-project`, containing everything you need to run and reproduce your project. It includes a virtual environment (in the `.venv` folder), a `pyproject.toml` file, a `uv.lock` file, a `.python-version` file, a `README.md` file, and an example `main.py` script. It will also initialize a Git repository in the project directory and add a `.gitignore` file with some default entries.
+This will create a new directory called `my-project`, containing everything you need to run and reproduce your project. It includes a virtual environment (inside a `.venv` folder), a `pyproject.toml` file, a `uv.lock` file, a `.python-version` file, a `README.md` file, and an example `main.py` script. It will also initialize a Git repository in the project directory and add a `.gitignore` file with some default entries.
 
-Feel free to edit or delete `README.md` and `main.py` – these are just example files to help you get started. However, do not modify or remove the other files, as they are essential for uv to work properly. If you don't want to create these files in the first place, you can use the `--bare` option (note that this also skips Git initialization):
+Feel free to edit or delete `README.md` and `main.py` – these are just example files to help you get started. However, do not modify or remove the other files, as they are essential for uv to work properly. If you don't want to create all of these files and instead just want a minimal setup, you can use the `--bare` option (note that this also skips Git initialization):
 
 ```bash
 uv init my-project --bare
 ```
 
 ::: {.callout-note}
-Note that uv will always use and pin the latest Python version installed on your computer when creating a new project. If you want to use a specific Python version instead, you can specify it using the `--python` option. For example, to create a project using Python 3.14, run:
+Note that uv will always use and pin the latest Python version available on your computer when creating a new project. If there is no Python version available, it will install the latest one. If you want to use a specific Python version instead, you can specify it using the `--python` option. For example, to create a project using Python 3.14, run:
 
 ```bash
 uv init my-project --python 3.14
@@ -77,7 +77,7 @@ uv init my-project --python 3.14
 
 ## Using the interactive Python interpreter
 
-First, change to the newly created project directory:
+First, change to the newly created project directory (if you haven't done so already):
 
 ```bash
 cd my-project
@@ -89,7 +89,7 @@ Running the following command will start the interactive Python interpreter:
 uv run python
 ```
 
-This will start a Python REPL (Read-Eval-Print Loop) in the project environment, which is very useful for testing and debugging code interactively. A prompt `>>>` indicates that Python is ready and waiting for your input. For example, you could type the following commands to calculate the square root of 2:
+This will open a Python REPL (Read-Eval-Print Loop) in the project environment, which is very useful for testing and debugging code interactively. A prompt `>>>` indicates that Python is ready and waiting for your input. For example, you could type the following commands to calculate the square root of 2:
 
 ```python
 import math
@@ -139,7 +139,7 @@ To add a new dependency to your project, you can use the `uv add` command follow
 uv add numpy
 ```
 
-This will automatically install the latest version of `numpy` in your project's virtual environment and update the `pyproject.toml` and `uv.lock` files accordingly. From now on, you can use `numpy` in your project. If you want to remove a dependency, you can use the `uv remove` command followed by the name of the package. For example, to remove `numpy`, run:
+This will automatically install the latest version of `numpy` in your project's virtual environment and update the `pyproject.toml` and `uv.lock` files accordingly. From now on, you can use `numpy` in your project. If you want to remove a dependency, you can use `uv remove` followed by the package name. For example, to remove `numpy`, simply run:
 
 ```bash
 uv remove numpy
@@ -152,14 +152,14 @@ If you just want to use uv to manage your Python projects, you don't need to wor
 
 Let's start with the two folders that uv creates in the project directory:
 
-- `.venv/`: This folder contains the virtual environment for your project. It is created and managed by uv (typically after you first run a command like `uv run python`) and holds all installed packages and dependencies. You *never* need to manually activate or deactivate the environment, as uv takes care of that for you. If you are using an IDE[^1] like Visual Studio Code or PyCharm, simply select this `.venv` folder as the project interpreter.
+- `.venv/`: This folder contains the virtual environment for your project. It is created and managed by uv (typically after you first run a command like `uv run python`) and holds all installed packages and dependencies. You *never* need to manually activate or deactivate the environment, as uv takes care of that for you. If you are using an IDE[^1] like Visual Studio Code or PyCharm, simply select this `.venv` folder as the project interpreter (usually, they will detect it automatically).
 - `.git/`: This folder is created because uv initializes the project as a Git repository (unless you specify the `--bare` option). This allows you to use version control for your project, which is important for reproducibility and collaboration.
 
 Here are the files that uv adds to the project:
 
 - `pyproject.toml`: This standard configuration file contains your project's metadata and dependencies. While you can edit it manually, it is recommended to use `uv add` and `uv remove` to manage dependencies.
-- `uv.lock`: Generated automatically when you first run a command like `uv run python` in your environment, this file captures an exact snapshot of your project's dependencies (with exact version numbers). It ensures your project remains reproducible, even if upstream packages change in the future. You should never manually edit this file!
-- `.python-version`: This file records the Python version uv uses for the project. When initializing, uv sets this to the latest installed Python version. This version is used any time you run `uv run python` or any other Python-related command in the project.
+- `uv.lock`: Generated automatically when you first run a command like `uv run python` in your environment, this file captures an exact snapshot of your project's dependencies (with exact version numbers). It ensures your project remains reproducible, even if upstream packages change in the future. You should *never* edit this file manually!
+- `.python-version`: This file records the Python version uv uses for the project. When initializing, uv uses the latest installed Python version. This version is used any time you run `uv run python` or any other Python-related command inside the project.
 - `.gitignore`: This file tells Git which files and folders to ignore. It is auto-generated by uv and includes common patterns such as `.venv/` and other temporary or system-specific files that should not be tracked in version control. In general, you should include `uv.lock` under version control, as it is essential for reproducibility – so do *not* add it to `.gitignore`!
 - `README.md`: A Markdown file intended to document your project's purpose, usage, and contribution guidelines. It starts empty, so you are encouraged to edit it and include useful information for others (and your future self).
 - `main.py`: A basic starter script created as an entry point for your project. You can modify it with your own code and run it using `uv run main.py`. If you don't need it, feel free to delete it.
@@ -168,7 +168,7 @@ Here are the files that uv adds to the project:
 
 Once your project is set up, uv provides two key commands to manage the dependencies:
 
-- `uv lock`: Regenerates the `uv.lock` file based on your current `pyproject.toml`. This is useful if you've made manual edits or want to refresh the lockfile with current versions that still meet your constraints.
 - `uv sync`: Installs the exact dependencies listed in the `uv.lock` file into your virtual environment. This ensures consistency across environments (for example, when collaborating or setting up a project environment on a new machine). If no `uv.lock` file exists, this command will create one based on the current `pyproject.toml`.
+- `uv lock`: Regenerates the `uv.lock` file based on your current `pyproject.toml`. This is useful if you've made manual edits or want to refresh the lockfile with current versions that still meet your constraints.
 
 To upgrade all dependencies in `uv.lock` to their latest available versions within the constraints defined in `pyproject.toml`, run `uv lock --upgrade` followed by `uv sync` to apply those updates to your environment.
