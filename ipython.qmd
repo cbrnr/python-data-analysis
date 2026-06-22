@@ -1,8 +1,8 @@
 ---
 title: "IPython"
-subtitle: "An enhanced interactive Python interpreter"
+subtitle: "An Enhanced Interactive Python Interpreter"
 author: "Clemens Brunner"
-date: 2025-06-30
+date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Running `python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as *Terminal* on macOS or *Windows Terminal* on Windows) invokes the *interactive* Python interpreter. This interpreter mode is especially useful for interactively playing around with data using a workflow called read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)), in which Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
+Running `uv run python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as *Terminal* on macOS or *Windows Terminal* on Windows) invokes the *interactive* Python interpreter. This interpreter mode is especially useful for interactively playing around with data using a workflow called the read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)), in which Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.
 
 Here's an example. After starting the interactive Python interpreter, we are presented with a prompt that looks like this:
 
@@ -36,7 +36,7 @@ All of this is already built into the standard Python interpreter. However, the 
 
 ## First steps
 
-If you are using uv to manage your Python projects, you can simply start IPython in your project directory by running the following command in your terminal:
+If you are using uv to manage your Python projects, you can simply start IPython in your project directory by running the following command in the terminal:
 
 ```bash
 uv run --with ipython ipython
@@ -64,7 +64,7 @@ In [2]: _
 Out[2]: 2
 ```
 
-In addition to the last result, we can also get the two previous ones with double and triple underscores, respectively. Alternatively, we can access a specific output by name via `_1`, `_2`, etc. (the numbers correspond to the output number). This also works for inputs using `_i1`, `_i2`, and so on.
+In addition to the last result, we can also retrieve the two previous ones with double and triple underscores, respectively. Alternatively, we can access a specific output by name via `_1`, `_2`, etc. (the numbers correspond to the output number). This also works for inputs using `_i1`, `_i2`, and so on.
 
 Finally, all inputs and outputs are also available as `In` (a list) and `Out` (a dictionary). For example, the first input and output can be accessed with `In[1]` and `Out[1]`, respectively.
 
@@ -87,7 +87,7 @@ Some of these shortcuts are also available in the regular interactive Python int
 
 ## Magic commands
 
-Magic commands are special IPython commands that provide functionality such as printing or changing the working directory. Normally, magic commands start with a `%` character, but by default they are also available without this prefix (unless a Python object with the same name exists). Here are some frequently used magic commands (a full list is available [here](https://ipython.readthedocs.io/en/stable/interactive/magics.html)):
+Magic commands are special IPython commands that provide additional functionality such as printing or changing the working directory. Normally, magic commands start with a `%` character, but by default they are also available without this prefix (unless a Python object with the same name exists). Here are some frequently used magic commands (a full list is available [here](https://ipython.readthedocs.io/en/stable/interactive/magics.html)):
 
 - `%cd <some_directory>` changes the working directory to `<some_directory>`.
 - `%pwd` prints the current working directory.
@@ -95,11 +95,12 @@ Magic commands are special IPython commands that provide functionality such as p
 - `%history` prints the (input) history.
 - `%matplotlib` enables interactive Matplotlib plotting (which means that plots are immediately shown and do not block the REPL).
 - `%paste` pastes text (code) from the clipboard.
+- `%pycat <file.txt>` displays the contents of the file `<file.txt>` with syntax highlighting.
 - `%run <script.py>` runs the entire script `<script.py>` in the current interactive session.
 - `%timeit <statement>` times the execution of a statement.
 
 :::{.callout-important}
-Magic commands are *not* valid Python, so use them only in the interactive interpreter – not in scripts!
+Magic commands are *not* valid Python, so use them only in the interactive interpreter – do *not* use them in Python scripts!
 :::
 
 
@@ -125,6 +126,8 @@ files[:5]
 
 :::{.callout-tip}
 Running shell commands only works for a given shell. For example, the `date` command is available on most macOS and Linux shells, but not on Windows (which has the `Get-Date` command instead).
+
+Therefore, always check if there are suitable magic commands available before using shell commands. For example, listing the contents of the working directory can be achieved with `%ls`, and showing the contents of a file can be done with `%pycat`. These magic commands are cross-platform and work regardless of the underlying shell or operating system.
 :::
 
 
@@ -132,7 +135,11 @@ Running shell commands only works for a given shell. For example, the `date` com
 
 IPython includes support for web-based documents for [literate programming](https://en.wikipedia.org/wiki/Literate_programming), so-called [Jupyter](https://jupyter.org/) notebooks. They combine [Markdown](https://daringfireball.net/projects/markdown/) text with code cells, which is useful for exploratory data analysis, tutorials, lecture notes, and so on. However, they are not great for reproducible research (unless the whole notebook is rendered from top to bottom and all results are computed from scratch).
 
-[Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents. Another nice feature of Quarto and Jupyter is that they support languages other than Python, for example R and Julia.
+[Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents.
+
+::: {.callout-note}
+Quarto and Jupyter support languages other than Python, for example R and Julia.
+:::
 
 We will not cover any of these notebook-like tools in this course, but it is good to know that they exist (so you know where to start). By the way, the course material you are reading right now is written with Quarto, and if you are interested, you can take a look at the [source](ipython.qmd) to find out how it works.
 
