@@ -2,7 +2,7 @@
 title: "NumPy"
 subtitle: "Basic building blocks and operations"
 author: "Clemens Brunner"
-date: 2025-06-30
+date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Python has not been designed with number crunching in mind. In fact, if you try to use built-in lists for numeric computing, you will soon notice several caveats:
+Python has *not* been designed with number crunching in mind. In fact, if you try to use built-in lists for numeric computing, you will soon notice several caveats:
 
 -   Operations with lists are slow
 -   Lists do not store numeric data efficiently
@@ -57,7 +57,7 @@ Even though the `array` module in the standard library features an `array` data 
 
 ## The *n*-dimensional array
 
-Before we discuss NumPy in detail, here is a quick teaser of how you can use it in our previous example:
+Before we discuss NumPy in detail, here is a quick teaser of how you can use it to solve the previous example:
 
 ```{python}
 import numpy as np
@@ -101,10 +101,10 @@ In addition to `dtype` and `shape`, the following attributes are also available:
 
 - `ndim` contains the number of dimensions (axes) (this is equal to the length of the `shape` tuple)
 - `size` contains the total number of elements in the array (this is equal to the product of the individual `shape` elements)
-- `itemsize` contains the size of one element in bytes (this is normally apparent from the `dtype`, for example `int64` means that one element occupies 64 bits, which corresponds to 8 bytes)
+- `itemsize` contains the size of one element in bytes (this is often also apparent from the `dtype`, for example `int64` means that one element occupies 64 bits, which corresponds to 8 bytes)
 - `nbytes` contains the total size of the array in bytes (this is equal to `size * itemsize`)
 
-These are the attributes for our example array `x`:
+These are the values of these attributes for our example array `x`:
 
 ```{python}
 x.ndim
@@ -188,7 +188,7 @@ Notice the decimal points in the output; the data type is therefore:
 g.dtype
 ```
 
-Besides the standard Python data types `int` and `float`, [more specific types](https://numpy.org/doc/stable/reference/arrays.scalars.html#sized-aliases) available as `np.int32`, `np.int64`, `np.float32`, `np.float64`, and so on, are also supported. In fact, `int` and `float` map to `np.int64` and `np.float64`, respectively.
+Besides the standard Python data types `int` and `float`, [more specific types](https://numpy.org/doc/stable/reference/arrays.scalars.html#sized-aliases) available as `np.int32`, `np.int64`, `np.float32`, `np.float64`, and so on, are also supported. In fact, `int` and `float` just map to `np.int64` and `np.float64`, respectively.
 
 
 ### Number ranges
@@ -216,18 +216,18 @@ np.linspace(start=13, stop=14, num=8)
 ```
 
 :::{.callout-note}
-Here, the stop value is *inclusive*, so the sequence will end at this value.
+Here, the stop value is *inclusive*, so the sequence will end exactly at this value.
 :::
 
 :::{.callout-tip}
-The `np.linspace()` function is helpful when you want to evaluate a function at many points. The following example plots a complete period of a sine using 100 equally-spaced points:
+The `np.linspace()` function is helpful when you want to evaluate a function at many points. The following example plots a complete period of a sine (from 0 to 2𝜋) using 100 equally-spaced points:
 
 ```{python}
 #| eval: false
 import matplotlib.pyplot as plt
 
-fig, ax = plt.subplots()
 x = np.linspace(0, 2 * np.pi, 100)  # 100 values from 0 to 2𝜋
+fig, ax = plt.subplots()
 ax.plot(x, np.sin(x))
 ```
 
@@ -269,14 +269,14 @@ Note how numbers are automatically displayed in [scientific notation](https://en
 
 ### Filled arrays
 
-Sometimes, it is necessary to create an array consisting of all zeros, all ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
+Sometimes it is necessary to create an array consisting of all zeros, all ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
 
 ```{python}
 np.zeros((2, 3))  # 2 rows, 3 columns
 ```
 
 :::{.callout-note}
-In the previous example, we passed the tuple `(2, 3)` as the first argument to create the desired array. To prevent Python from interpreting these numbers as separate arguments, it is necessary to enclose this tuple within parentheses. In other words, `np.zeros(2, 3)` does *not* work! To make it really explicit, we can use a keyword argument in our function call:
+In the previous example, we passed the tuple `(2, 3)` as the first argument to create the desired array. To prevent Python from interpreting these numbers as separate arguments, it is necessary to enclose this tuple within parentheses. In other words, `np.zeros(2, 3)` does *not* work! To make it really explicit, we can use a keyword argument in the function call:
 
 ```python
 np.zeros(shape=(2, 3))
@@ -318,7 +318,7 @@ np.eye(5)
 
 ### Random numbers
 
-The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of probability distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same random numbers every time we run our code. This is important for reproducible results.
+The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of probability distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same sequence of random numbers every time we run the code. This is important for reproducible results.
 
 ```{python}
 from numpy.random import default_rng
@@ -359,11 +359,10 @@ rng.integers(low=-3, high=99, size=(2, 5))
 
 However, we can always change the current shape of an array to a new *compatible* shape. Here, compatible means that the total number of elements must stay the same, so we could reshape an array with 3 rows and 4 columns to 6 rows and 2 columns (the total number of elements remains 12).
 
-There are three main ways to change the shape of an array:
+There are two ways to change the shape of an array:
 
-1.  Assign a new value (tuple) to the `shape` attribute
-2.  Use the `resize()` method
-3.  Use the `reshape()` method
+1.  Using the `resize()` method
+2.  Using the `reshape()` method
 
 Let's take a look at each of these options in turn with the following `(3, 4)` example array:
 
@@ -373,23 +372,16 @@ x
 x.shape
 ```
 
-If we want to reshape this array to 4 rows and 3 columns, we can directly manipulate its shape:
-
-```{python}
-x.shape = (4, 3)
-x
-```
-
-This modifies the shape of the array *in place*. Note that the way the array is stored in memory does not change, so this is a very fast operation.
-
-Another way to change the shape is to call the `resize()` method with the new shape, which will also modify the array in place:
+If we want to reshape this array to 2 rows and 6 columns, we can use its `resize()` method:
 
 ```{python}
 x.resize((2, 6))
 x
 ```
 
-Finally, the `reshape()` method works just like `resize()`, but it creates a copy and returns a new array with the new shape (so it does *not* modify the array in place, which is slower and requires more memory):
+This modifies the shape of the array *in place*. Note that the way the array is stored in memory does not change, so this is a very fast operation.
+
+The `reshape()` method works just like `resize()`, but it creates a *copy* and returns a new array with the new shape (so it does *not* modify the array in place, which is slower and requires more memory):
 
 ```{python}
 x.reshape((3, 4))
@@ -436,6 +428,14 @@ Negative indexes count from the end of the array, so the last item is:
 ```{python}
 x[-1]
 ```
+
+::: {.callout-tip}
+If the resulting index or slice consists only of a single value (a scalar), the result is still a NumPy-specific data type (such as `np.int64`) and not a standard Python data type (such as `int`). In general, this should not be a problem, since you can use these NumPy-specific scalars in the same way as their standard Python counterparts. However, if you want to convert a NumPy-specific type to a standard Python type, you can use the `item()` method:
+
+```{python}
+x[0].item()  # convert np.int64 to int
+```
+:::
 
 Slices pull out multiple elements with the `:` operator to indicate the desired range (and an optional step size). Note that the stop index is *exclusive*.
 
@@ -532,7 +532,7 @@ Whenever possible, avoid loops over arrays! Loops are very slow and inefficient 
 
 ### Vector and matrix operations
 
-Note that NumPy does not attach special meanings to 1D or 2D arrays. A 1D array is not interpreted as a vector, and similarly, a 2D array is not interpreted as a matrix. However, it is of course possible to perform vector and matrix operations with special notation. Specifically, the [dot product](https://en.wikipedia.org/wiki/Dot_product) between two vectors can be computed with the `@` operator:
+NumPy does not attach special meanings to 1D or 2D arrays. A 1D array is not interpreted as a vector, and similarly, a 2D array is not interpreted as a matrix. However, it is of course possible to perform vector and matrix operations with special notation. Specifically, the [dot product](https://en.wikipedia.org/wiki/Dot_product) between two vectors (represented as one-dimensional arrays) can be computed with the `@` operator:
 
 ```{python}
 a = np.array([1, 2, 3])
@@ -555,9 +555,11 @@ B = np.arange(6).reshape((3, 2))
 A @ B
 ```
 
-Note that if the shapes are not compatible with matrix multiplication (the number of columns of the first operand must equal the number of rows of the second operand), we will get an error.
+::: {.callout-note}
+If the shapes are not compatible with matrix multiplication (the number of columns of the first operand must equal the number of rows of the second operand), we will get an error.
+:::
 
-In summary, we saw that if two arrays have the same shape, operations are performed element by element. Things get a little more complicated when the two arrays have different shapes – we will discuss this so-called broadcasting soon. But before that, there's even more we can do with just a single array using its special array methods.
+In summary, we saw that if two arrays have the same shape, operations are performed element by element. Things get a little more complicated when the two arrays have different shapes – we will discuss this so-called broadcasting soon. But before that, there's even more we can do with just a single array using its array methods.
 
 
 ### Array methods
