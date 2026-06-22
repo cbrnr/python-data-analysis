@@ -1,6 +1,6 @@
 ---
 title: "IPython"
-subtitle: "An Enhanced Interactive Python Interpreter"
+subtitle: "An enhanced interactive Python interpreter"
 author: "Clemens Brunner"
 date: 2026-06-29
 format: html

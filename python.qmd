@@ -1,6 +1,6 @@
 ---
 title: "Installing Python"
-subtitle: "A Beginner's Guide for Reproducible Python Projects"
+subtitle: "A beginner's guide for reproducible Python projects"
 author: "Clemens Brunner"
 date: 2026-06-29
 format: html
