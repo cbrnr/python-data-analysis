@@ -2,7 +2,7 @@
 title: "Matplotlib"
 subtitle: "Data wrangling essentials"
 author: "Clemens Brunner"
-date: 2025-06-30
+date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-In the previous chapter, we used pandas to quickly visualize data contained in a data frame column. This is very convenient, but limited to a few commonly used visualization types like line charts, bar chars, scatter plots, and histograms (see the [official documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html) for more details).
+In the previous chapter, we used pandas to quickly visualize data contained in a data frame column. This is very convenient, but limited to a few commonly used visualization types like line charts, bar charts, scatter plots, and histograms (see the [official documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html) for more details).
 
 [Matplotlib](https://matplotlib.org) is one of the most important visualization packages for Python. It can create almost any type of visualization, with tons of customization options to make the plot look just the way you want. In fact, plots created with pandas use Matplotlib under the hood.
 
@@ -45,13 +45,15 @@ Plots created with Matplotlib are *not* displayed by default. To display a plot 
 plt.show()
 ```
 
-However, this window blocks the Python interpreter, i.e., you cannot enter any further commands as long as the graphics window is open. To avoid this behavior, you can enter the following command in the interactive Python interpreter directly after importing:
+However, this window blocks the Python interpreter, i.e., you cannot enter any further commands as long as the plot window is open. To avoid this behavior, you can enter the following command in the interactive Python interpreter directly after importing:
 
 ```python
 plt.ion()
 ```
 
-This command ensures that plots are displayed immediately after they are created ("ion" stands for "interactive on"). Note that scripts should not use this command, as it can lead to unexpected behavior.
+This command ensures that plots are displayed immediately after they are created ("ion" stands for "interactive on").
+
+In contrast to using `plt.ion()` in the REPL, scripts should *not* use this command, as it can lead to unexpected behavior.
 :::
 
 
@@ -198,7 +200,7 @@ fig, axes = plt.subplots(1, 3, figsize=(9, 4))
 
 This example creates a `Figure` containing three `Axes` arranged in one row and three columns. We named this collection of three `Axes` objects `axes`, which is a one-dimensional NumPy array. Therefore, we can access the individual elements using `axes[0]`, `axes[1]`, and `axes[2]` to create the desired plots.
 
-We can also generate a two-dimensional arrangements consisting of multiple rows and columns. In this case, the returned axes are available in a *two-dimensional* NumPy array. Therefore, we need to extract the individual `Axes` objects with a two-dimensional index (i.e., row and column). For example, `axes[0, 2]` would be the `Axes` object in row 0 (i.e., the first row) and column 2 (i.e., the third column).
+We can also generate a two-dimensional arrangement consisting of multiple rows and columns. In this case, the returned axes are available in a *two-dimensional* NumPy array. Therefore, we need to extract the individual `Axes` objects with a two-dimensional index (i.e., row and column). For example, `axes[0, 2]` would be the `Axes` object in row 0 (i.e., the first row) and column 2 (i.e., the third column).
 
 To avoid any overlap in a `Figure` with multiple `Axes` objects, it is recommended to run the following line after all plots have been created:
 
@@ -336,8 +338,8 @@ A boxplot displays the distribution of a dataset based on its quartiles. The box
 
 The whiskers extend from the edges of the box to the most extreme data points that are within 1.5 times the IQR from the quartiles:
 
-- The lower whisker reaches down to the smallest value that is greater than or equal to Q1 − 1.5 × IQR.
-- The upper whisker extends up to the largest value that is less than or equal to Q3 + 1.5 × IQR.
+- The lower whisker reaches down to the smallest value that is greater than or equal to Q1 − 1.5 ⋅ IQR.
+- The upper whisker extends up to the largest value that is less than or equal to Q3 + 1.5 ⋅ IQR.
 
 Any data points beyond these limits are shown individually and are considered outliers.
 :::
@@ -361,7 +363,7 @@ _ = ax.violinplot([x, y, z])
 
 ### Additional plot types
 
-Matplotlib supports many other plot types, such as pie charts, contour plots, and 3D plots. However, if you want to create scatter plots with overlaid regression lines or other more complex statistical plot types, you should take a look at more specialized packages like seaborn. While it is theoretically possible to create these types of plots with Matplotlib, it would require many manual steps (e.g., you would have to fit a linear regression model to the data before including it in a plot). Seaborn automates these steps and provides sensible defaults for many common plot types.
+Matplotlib supports many other plot types, such as pie charts, contour plots, and 3D plots. However, if you want to create scatter plots with overlaid regression lines or other more complex statistical plot types, you should take a look at more specialized packages like [seaborn](https://seaborn.pydata.org/). While it is theoretically possible to create these types of plots with Matplotlib, it would require many manual steps (e.g., you would have to fit a linear regression model to the data before including it in a plot). Seaborn automates these steps and provides sensible defaults for many common plot types.
 
 
 ### Title and axis labels
