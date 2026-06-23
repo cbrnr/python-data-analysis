@@ -22,7 +22,7 @@ Why do we need another package on top of NumPy? Could we not just use NumPy arra
 
 [Pandas](https://pandas.pydata.org/)[^2] offers a flexible data type for tabular data which builds upon NumPy arrays, but can accommodate heterogeneous column types: the so-called *data frame*.
 
-[^2]: Note that pandas is spelled with all lower-case letters. We will capitalize the first letter only at the   beginning of a sentence.
+[^2]: Note that pandas is spelled with all lower-case letters. We will capitalize the first letter only at the beginning of a sentence.
 
 By convention, we import pandas as follows:
 
