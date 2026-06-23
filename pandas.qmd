@@ -16,7 +16,7 @@ theme:
 
 ## Introduction
 
-Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in many cases this is not going to work. NumPy arrays are *homogenous* arrays, which means that all array items must have the same type. However, real-world tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might hold floating point numbers, text (strings), dates, or categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1].
+Why do we need another package on top of NumPy? Could we not just use NumPy arrays for our data analysis tasks? Unfortunately, in many cases this is not going to work. NumPy arrays are *homogeneous* arrays, which means that all array items must have the same type. However, real-world tabular data generally consists of variables (columns) that have different types. For example, whereas some columns might contain integers, others might hold floating point numbers, text (strings), dates, or categorical data. Such a diverse collection of variables cannot be represented by a NumPy array[^1].
 
 [^1]: NumPy supports arrays with different data types through [structured arrays](https://numpy.org/doc/stable/user/basics.rec.html), but pandas data frames are usually much easier to work with in a typical data analysis pipeline.
 
