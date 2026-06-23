@@ -32,10 +32,14 @@ import pandas as pd
 
 Before we discuss data frames, we will introduce series as essential building blocks.
 
+::: callout-note
+[Polars](https://pola.rs/) is a newer package that is similar to pandas, but it often provides better performance due to its Rust-based, multi-threaded lazy execution engine. At present, pandas remains more widely supported and is still the standard in most scientific Python workflows, but this may change in the future. However, this is a topic for another course.
+:::
+
 
 ## Series
 
-A pandas series (`pd.Series`) is a sequence-like homogeneous object, similar to a one-dimensional NumPy array. In fact, series are based on NumPy arrays under the hood, so they share important properties. For example, just like a NumPy array, a series has a specific data type (which means that all elements have the same type).
+A pandas series (`pd.Series`) is a sequence-like homogeneous object, similar to a one-dimensional NumPy array. Series are often based on NumPy arrays under the hood, so they share important properties. For example, just like a NumPy array, a series has a specific data type (which means that all elements have the same type).
 
 We can construct a series from any iterable, such as a standard list. Here's an example:
 
@@ -43,7 +47,7 @@ We can construct a series from any iterable, such as a standard list. Here's an 
 pd.Series([1, 2, 3, 4, 5])
 ```
 
-The output shows two columns: the values are in the right column, whereas the left column shows the index (which by default starts with zero). The bottom row displays the data type (`int64` in this case).
+The output shows two columns: the values are in the right column, whereas the left column shows the index (which by default starts at zero). The bottom row displays the data type (`int64` in this case).
 
 We can enforce a specific data type with the `dtype` argument:
 
@@ -58,7 +62,7 @@ Pandas data types are based on [NumPy array scalars](https://numpy.org/doc/stabl
 - Floating point numbers: `float16`, `float32`, `float64`, and `float128`
 - Complex numbers: `complex64`, `complex128`, and `complex256`
 
-The shorthand notations `int`, `uint`, `float`, and `complex` map to `int64`, `uint64`, `float64`, and `complex128` on most machines, respectively. The numbers indicate the bits used to store one element of a particular type (for example, an `int16` value requires 16 bits, or 2 bytes, of memory). Type specifications should be passed as a string when used as the `dtype` argument:
+The shorthand notations `int`, `uint`, `float`, and `complex` map to `int64`, `uint64`, `float64`, and `complex128` on most machines. The numbers indicate the bits used to store one element of a particular type (for example, an `int16` value requires 16 bits, or 2 bytes, of memory). Type specifications should be passed as a string when used as the `dtype` argument:
 
 ```{python}
 pd.Series([1, 2, 3], dtype="int")
@@ -67,11 +71,13 @@ pd.Series([1, 2, 3], dtype="float32")
 pd.Series([1, 2, 3], dtype="complex128")
 ```
 
-Strings are stored as `object` series by default (`object` is the base class in Python that all other data types inherit from – so everything is an `object`, including strings):
+Since pandas 3.0, strings are stored as `str` by default:
 
 ```{python}
 pd.Series(["a", "b", "c"])
 ```
+
+In older versions of pandas, strings were stored as `object` – a NumPy data type that acts as a generic container for arbitrary Python objects – which made string columns ambiguous and less efficient.
 
 Finally, boolean series are also supported:
 
@@ -83,17 +89,19 @@ Besides these basic data types, pandas also features so-called [extension data t
 
 - `category` for categorical data
 - `Int8`, `Int16`, `Int32`, `Int64`, `UInt8`, `UInt16`, `UInt32`, and `UInt64` for integer types with support for missing values (note the upper case initial letters)
-- `string` for string data
-- `boolean` for boolean data with support for missing values (note that this is different from the basic `bool` data type)
+- `boolean` for boolean data with support for missing values (note that this is different from the basic `bool` dtype)
 
 ```{python}
 pd.Series(["a", "b", "c"], dtype="category")
 pd.Series([1, 2, 3], dtype="Int64")
-pd.Series(["a", "b", "c"], dtype="string")
 pd.Series([True, True, False], dtype="boolean")
 ```
 
-In general, it is recommended to use these extension data types because they perform as well as the core types, but offer better support for missing values or other functionality.
+In general, it is recommended to use extension data types for integers and booleans because they offer better support for missing values.
+
+::: callout-note
+Pandas also has an older `string` extension dtype (specified as `dtype="string"`). The key difference is how missing values are represented: `str` uses `np.nan` (consistent with other default data types), whereas `string` uses `pd.NA`. Unless you specifically need `pd.NA` semantics, use the default `str`.
+:::
 
 
 ## Data frames
@@ -172,7 +180,7 @@ One of the most useful methods is `info()`, which displays essential information
 df.info()
 ```
 
-In this example, we see that `df` consists of four rows and three columns. For each column, the label, number of non-missing (non-null) values, and data type are listed. Column A contains `float64` values (double precision floating point numbers), column B contains strings (available as `object`), and column C contains `int64` integers.
+In this example, we see that `df` consists of four rows and three columns. For each column, the label, number of non-missing (non-null) values, and data type are listed. Column A contains `float64` values (double precision floating point numbers), column B contains strings (`str`), and column C contains `int64` integers.
 
 Obviously, typing `df` in an interactive interpreter prints the data frame:
 
@@ -192,7 +200,7 @@ df = pd.DataFrame(
 df
 ```
 
-We can change this behavior by setting the following two options to appropriate values (`None` means unlimited, whereas `0` uses the defaults):
+We can change this behavior by setting the following two options to appropriate values (`None` means unlimited, whereas `0` means the defaults):
 
 ```{python}
 #| eval: false
@@ -232,9 +240,9 @@ df.describe().round(2)  # rounded to two decimal places
 
 ### Missing data
 
-Almost any real-word data contains missing values. Pandas encodes missing numeric values as `NaN` ("Not a Number"), a sentinel value defined in the [IEEE 754 floating point standard](https://en.wikipedia.org/wiki/IEEE_754). Therefore, this missing value only exists for floating point data, and integer series are automatically converted to float if they contain missing values. Datetime types have a special `NaT` ("Not a Time") value to represent missing dates. Strings and boolean types can use `None` for missing values. In summary, missing data is represented with various different values depending on the underlying data type.
+Almost any real-word data contains missing values. Pandas encodes missing numeric values as `NaN` ("Not a Number"), a sentinel value defined in the [IEEE 754 floating point standard](https://en.wikipedia.org/wiki/IEEE_754). Because `NaN` is a floating point concept, integer series are automatically promoted to `float64` when they contain missing values. Datetime types have a special `NaT` ("Not a Time") value to represent missing dates.
 
-Recently, pandas has started to unify missing data support with a native `NA` ("Not Available") value (available as `pd.NA`). Future versions of pandas will likely support `NA` for all data types, but right now we have to live with the variety of different missing value representations (which of course are all handled correctly by pandas).
+Pandas also has a native `NA` ("Not Available") value (`pd.NA`) that is not tied to any specific storage type. Extension data types such as `Int64` and `boolean` use `pd.NA` for missing values, displayed as `<NA>`.
 
 To illustrate these ideas, let's create a data frame with some missing values:
 
@@ -244,16 +252,16 @@ df
 df.dtypes
 ```
 
-Notice that the first column is coerced to `float64`, because it contains a missing value (otherwise, it would be `int64`). In both numerical columns, missing values are represented as `NaN`, whereas the last column is interpreted as a string (`object`) column because of the `None` element.
+Notice that the first column is promoted to `float64` because it contains a missing value (otherwise it would be `int64`). Both numeric columns represent missing values as `NaN`. The last column is inferred as `object` because it also contains `None` (interpreted as a missing value).
 
-These types are probably not what we expected, so it might be a good idea to use extension data types discussed earlier. Most extension data types support the native `NA` value, which is displayed as `<NA>`:
+These types may not be what we want. For integers and booleans in particular, it is a good idea to use extension data types, which preserve the intended type even in the presence of missing values:
 
 ```{python}
 df = pd.DataFrame(
     {
         "A": pd.Series([1, pd.NA, 2], dtype="Int64"),
         "B": pd.Series([True, False, pd.NA], dtype="boolean"),
-        "C": pd.Series([pd.NA, "b", "c"], dtype="string"),
+        "C": pd.Series([pd.NA, "b", "c"]),
         "D": [0.0, 0.5, 1.5],
         "E": [10, 11, 12]
     },
@@ -270,7 +278,7 @@ It is easy to check which values are missing in a data frame with the `isna()` m
 df.isna()
 ```
 
-This works for all kinds of missing value representations, including `NaN`, `None`, and `NA`.
+This works for all kinds of missing value representations, including `NaN`, `NaT`, `None`, and `NA`.
 :::
 
 
@@ -386,18 +394,13 @@ Let's take a look at the inferred column data types:
 df.dtypes
 ```
 
-Pandas uses the NumPy-based data types by default, so columns `name` and `gender` (which contain strings) are available as `object` columns. Columns `id` and `height` contain integers (`int64`), and column `bp` holds floating point numbers (`float64`). Although column `weight` originally contains integers, pandas converts it to `float64` due to the presence of a missing value.
+Columns `name` and `gender` contain strings (so their data type is `str`), columns `id` and `height` contain integers (`int64`), and column `bp` holds floating point numbers (`float64`). Although column `weight` originally contains only integers, pandas promotes it to `float64` due to the presence of a missing value.
 
-If we are not happy with one of the automatically inferred data types, we can always change individual columns after importing with the `astype()` method. For example, the `gender` column could be represented with a categorical data type. We could also use the `Int64` data type for the `weight` column, which supports missing values. Finally, we could convert the `id` column from `object` to the more modern `string` data type.
-
-::: {.callout-note}
-We do not have to perform any of these conversions, because the automatically inferred data types are fine in most cases (and in particular, `weight` is actually a continuous variable, so it is a good idea to use `float64` for it).
-:::
+If we are not happy with one of the automatically inferred data types, we can always change individual columns after importing with the `astype()` method. For example, the `gender` column could be represented with a categorical data type. We could also use the `Int64` data type for the `weight` column, which supports missing values.
 
 ```{python}
 df["gender"] = df["gender"].astype("category")
 df["weight"] = df["weight"].astype("Int64")
-df["id"] = df["id"].astype("string")
 df.dtypes
 df
 ```
@@ -405,10 +408,7 @@ df
 Alternatively, we can specify the desired data types when importing the file with the `dtype` argument. This is more efficient, especially if the data frame is large:
 
 ```{python}
-df = pd.read_csv(
-    "data.csv",
-    dtype={"gender": "category", "weight": "Int64", "id": "string"}
-)
+df = pd.read_csv("data.csv", dtype={"gender": "category", "weight": "Int64"})
 df.dtypes
 ```
 
@@ -527,17 +527,13 @@ flights = pd.read_csv(
         "arr_time": "Int64",
         "arr_delay": "Int64",
         "air_time": "Int64",
-        "carrier": "string",
-        "tailnum": "string",
-        "origin": "string",
-        "dest": "string"
     }
 )
 flights.drop(columns=["year", "hour", "minute", "time_hour"], inplace=True)
 flights.info()
 ```
 
-Notice that in order to get better support for missing values, we specify the data types for integer and string columns manually as one of the extension types `Int64` and `string`, respectively. We also drop the `year`, `hour`, `minute`, and `time_hour` columns, because we won't need them in our analyses (and they contain only redundant information anyway).
+Notice that in order to get better support for missing values, we specify the data types for integer columns manually as the extension type `Int64`. We also drop the `year`, `hour`, `minute`, and `time_hour` columns, because we won't need them in our analyses (and they contain only redundant information anyway).
 
 The `nycflights13` data set contains data on all 336,776 flights departing from New York City airports ([JFK](https://en.wikipedia.org/wiki/John_F._Kennedy_International_Airport), [LGA](https://en.wikipedia.org/wiki/LaGuardia_Airport), and [EWR](https://en.wikipedia.org/wiki/Newark_Liberty_International_Airport)) in 2013. Let's see what we can find out about these flights.
 
