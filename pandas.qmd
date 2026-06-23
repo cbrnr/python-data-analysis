@@ -2,7 +2,7 @@
 title: "Pandas"
 subtitle: "Data wrangling essentials"
 author: "Clemens Brunner"
-date: 2025-06-30
+date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
