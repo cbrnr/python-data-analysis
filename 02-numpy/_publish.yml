@@ -1,0 +1,4 @@
+- source: 02-numpy.qmd
+  quarto-pub:
+    - id: 6f999cc8-82f7-4d05-928b-be0b494e880f
+      url: https://cbrnr.quarto.pub/python-data-analysis-02

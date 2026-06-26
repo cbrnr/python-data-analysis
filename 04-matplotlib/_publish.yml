@@ -1,0 +1,4 @@
+- source: 04-matplotlib.qmd
+  quarto-pub:
+    - id: 325f9149-902d-49b2-81fa-550bf314e39e
+      url: https://cbrnr.quarto.pub/python-data-analysis-04
