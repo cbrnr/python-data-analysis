@@ -14,6 +14,12 @@ theme:
   dark: [darkly, theme-dark.scss]
 ---
 
+```{python}
+#| include: false
+# show output for every expression in a cell, not just the last one
+get_ipython().ast_node_interactivity = "all"
+```
+
 ## Introduction
 
 Setting up and managing a Python project has historically been a rather tedious and complicated task. Fortunately, the [uv](https://docs.astral.sh/uv/) package and project manager solves many of these problems, making it very easy to create a fully reproducible Python environment.

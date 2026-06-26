@@ -14,6 +14,12 @@ theme:
   dark: [darkly, theme-dark.scss]
 ---
 
+```{python}
+#| include: false
+# show output for every expression in a cell, not just the last one
+get_ipython().ast_node_interactivity = "all"
+```
+
 ## Introduction
 
 Running `uv run python` (without any further arguments) from a [command line shell](https://en.wikipedia.org/wiki/Shell_(computing)) (such as *Terminal* on macOS or *Windows Terminal* on Windows) invokes the *interactive* Python interpreter. This interpreter mode is especially useful for interactively playing around with data using a workflow called the read–eval–print loop ([REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)), in which Python *reads* a command (which the user just entered), *evaluates* it, *prints* its result, and repeats these steps for every subsequent command in a *loop*.

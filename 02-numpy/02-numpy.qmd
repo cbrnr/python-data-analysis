@@ -6,13 +6,19 @@ date: 2026-06-29
 format: html
 toc: true
 toc-title: ""
-engine: knitr
+engine: jupyter
 highlight-style: github
 title-block-banner: true
 theme:
   light: [flatly, theme-light.scss]
   dark: [darkly, theme-dark.scss]
 ---
+
+```{python}
+#| include: false
+# show output for every expression in a cell, not just the last one
+get_ipython().ast_node_interactivity = "all"
+```
 
 ## Introduction
 
