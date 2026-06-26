@@ -3,7 +3,9 @@ title: "Matplotlib"
 subtitle: "Data wrangling essentials"
 author: "Clemens Brunner"
 date: 2026-06-29
-format: html
+format:
+  html:
+    page-layout: full
 toc: true
 toc-title: ""
 engine: jupyter
@@ -14,18 +16,11 @@ theme:
   dark: [darkly, ../theme-dark.scss]
 ---
 
-```{python}
-#| include: false
-# show output for every expression in a cell, not just the last one
-get_ipython().ast_node_interactivity = "all"
-```
-
 ## Introduction
 
 In the previous chapter, we used pandas to quickly visualize data contained in a data frame column. This is very convenient, but limited to a few commonly used visualization types like line charts, bar charts, scatter plots, and histograms (see the [official documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/visualization.html) for more details).
 
 [Matplotlib](https://matplotlib.org) is one of the most important visualization packages for Python. It can create almost any type of visualization, with tons of customization options to make the plot look just the way you want. In fact, plots created with pandas use Matplotlib under the hood.
-
 
 ## Matplotlib
 
@@ -61,7 +56,6 @@ This command ensures that plots are displayed immediately after they are created
 
 In contrast to using `plt.ion()` in the REPL, scripts should *not* use this command, as it can lead to unexpected behavior.
 :::
-
 
 ### Creating plots
 
@@ -117,7 +111,6 @@ ax.set_xlabel("x Axis label", fontsize=14)
 ax.set_ylabel("y Axis label", fontsize=14)
 ax.legend(loc="upper right", fontsize=14)
 
-
 def annotate(x, y, text, code, color=[0, 20/256, 82/256]):
     c = Circle(
         (x, y),
@@ -161,7 +154,6 @@ def annotate(x, y, text, code, color=[0, 20/256, 82/256]):
             fontsize="medium",
             path_effects=path_effects
         )
-
 
 annotate(3.5, -0.13, "Minor tick label", "ax.xaxis.set_minor_formatter")
 annotate(-0.03, 1.0, "Major tick", "ax.yaxis.set_major_locator")
@@ -227,7 +219,6 @@ fig, axes = plt.subplots(2, 3)
 fig.set_tight_layout(True)
 ```
 
-
 ### Line plots
 
 Matplotlib supports many different [plot types](https://matplotlib.org/stable/plot_types/index.html). First, let's look at line plots, which are useful for displaying time series data. We use the following example data `x` and `y`:
@@ -250,7 +241,6 @@ fig, ax = plt.subplots()
 _ = ax.plot(x, y)
 ```
 
-
 ### Scatter plots
 
 To create a scatter plot, we use the `scatter` method, which provides sensible default values for this type of plot:
@@ -259,7 +249,6 @@ To create a scatter plot, we use the `scatter` method, which provides sensible d
 fig, ax = plt.subplots()
 ax.scatter(x, y)
 ```
-
 
 ### Bar charts and stem plots
 
@@ -283,7 +272,6 @@ Alternatively, we could also visualize these values as a stem plot:
 fig, ax = plt.subplots()
 ax.stem(x, y)
 ```
-
 
 ### Histograms
 
@@ -314,7 +302,6 @@ In this example, we manually set the number of bins to 50. We also use a white e
 :::{.callout-tip}
 All plotting methods (e.g., `plot`, `scatter`, `bar`, `stem`) have optional arguments that allow us to customize the appearance of the plot. These are described in the respective documentations.
 :::
-
 
 ### Boxplots
 
@@ -350,7 +337,6 @@ The whiskers extend from the edges of the box to the most extreme data points th
 Any data points beyond these limits are shown individually and are considered outliers.
 :::
 
-
 ### Violin plots
 
 Violin plots can be used as an alternative to boxplots. For example, the data from the previous section could also be visualized like this:
@@ -366,11 +352,9 @@ fig, ax = plt.subplots()
 _ = ax.violinplot([x, y, z])
 ```
 
-
 ### Additional plot types
 
 Matplotlib supports many other plot types, such as pie charts, contour plots, and 3D plots. However, if you want to create scatter plots with overlaid regression lines or other more complex statistical plot types, you should take a look at more specialized packages like [seaborn](https://seaborn.pydata.org/). While it is theoretically possible to create these types of plots with Matplotlib, it would require many manual steps (e.g., you would have to fit a linear regression model to the data before including it in a plot). Seaborn automates these steps and provides sensible defaults for many common plot types.
-
 
 ### Title and axis labels
 

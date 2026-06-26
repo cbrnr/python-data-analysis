@@ -3,7 +3,9 @@ title: "NumPy"
 subtitle: "Basic building blocks and operations"
 author: "Clemens Brunner"
 date: 2026-06-29
-format: html
+format:
+  html:
+    page-layout: full
 toc: true
 toc-title: ""
 engine: jupyter
@@ -16,8 +18,9 @@ theme:
 
 ```{python}
 #| include: false
-# show output for every expression in a cell, not just the last one
-get_ipython().ast_node_interactivity = "all"
+# set line width
+import numpy as np
+np.set_printoptions(linewidth=100)
 ```
 
 ## Introduction
@@ -59,7 +62,6 @@ list(map(lambda x: x + 1, x))
 Even though the `array` module in the standard library features an `array` data type (which stores elements of the same type much more efficiently than lists), elementwise operations with a simple syntax are still not supported.
 
 [NumPy](https://numpy.org/) solves all of these issues. The importance of this third-party package cannot be understated: without NumPy, Python would not be one of the most popular programming language for data science today. Many scientific packages like [SciPy](https://scipy.org/), [pandas](https://pandas.pydata.org/), and [Scikit-Learn](https://scikit-learn.org/stable/) rely on NumPy under the hood, so it makes sense to learn the basics even if you do not plan to work with NumPy directly. This is the goal of this chapter.
-
 
 ## The *n*-dimensional array
 
@@ -114,11 +116,19 @@ These are the values of these attributes for our example array `x`:
 
 ```{python}
 x.ndim
-x.size
-x.itemsize
-x.nbytes
 ```
 
+```{python}
+x.size
+```
+
+```{python}
+x.itemsize
+```
+
+```{python}
+x.nbytes
+```
 
 ## Creating arrays
 
@@ -169,7 +179,13 @@ All arrays that we created so far contain integers (because our lists that we pr
 
 ```{python}
 x.dtype
+```
+
+```{python}
 y.dtype
+```
+
+```{python}
 z.dtype
 ```
 
@@ -178,6 +194,9 @@ We can also create arrays consisting of floating point numbers, for example:
 ```{python}
 f = np.array([[1.1, 5.2, -8.3], [-4.4, 15.5, 9.6]])
 f
+```
+
+```{python}
 f.dtype
 ```
 
@@ -195,7 +214,6 @@ g.dtype
 ```
 
 Besides the standard Python data types `int` and `float`, [more specific types](https://numpy.org/doc/stable/reference/arrays.scalars.html#sized-aliases) available as `np.int32`, `np.int64`, `np.float32`, `np.float64`, and so on, are also supported. In fact, `int` and `float` just map to `np.int64` and `np.float64`, respectively.
-
 
 ### Number ranges
 
@@ -272,7 +290,6 @@ np.logspace(start=-1, stop=7, num=16)
 
 Note how numbers are automatically displayed in [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation) to accomodate the broad range with a fixed number of digits.
 
-
 ### Filled arrays
 
 Sometimes it is necessary to create an array consisting of all zeros, all ones, or any arbitrary fixed value. This can be achieved with `np.zeros()`, `np.ones()`, and `np.full()`. If you only want to pre-allocate an array of a given size and do not care which values it contains initially, you can use `np.empty()`.
@@ -321,7 +338,6 @@ Finally, `np.eye()` is a nice shortcut to create a square two-dimensional "ident
 np.eye(5)
 ```
 
-
 ### Random numbers
 
 The `numpy.random` module provides functions to generate (pseudo-)random numbers from a variety of probability distributions. This works as follows: first, we create a generator, which we can then use to draw random numbers from a specific probability distribution. In the following example, we use the default generator provided by `default_rng()`. We also set the random seed of this generator (`42` in this example, but the specific value does not matter), which means that we will get the exact same sequence of random numbers every time we run the code. This is important for reproducible results.
@@ -337,10 +353,15 @@ x3 = rng.integers(low=-3, high=99, size=(2, 5))
 
 ```{python}
 x1
-x2
-x3
 ```
 
+```{python}
+x2
+```
+
+```{python}
+x3
+```
 
 ## Shape and reshape
 
@@ -350,8 +371,17 @@ We already saw how to create various arrays with different shapes using the `sha
 
 ```{python}
 np.zeros(shape=(2, 3))
+```
+
+```{python}
 np.ones(shape=(3, 2))
+```
+
+```{python}
 np.full(shape=(2, 4), fill_value=2)
+```
+
+```{python}
 np.empty(shape=(2, 3))
 ```
 
@@ -359,7 +389,13 @@ Functions that create arrays with random numbers use the `size` argument to spec
 
 ```{python}
 rng.standard_normal(size=(2, 5))
+```
+
+```{python}
 rng.uniform(size=(2, 2))
+```
+
+```{python}
 rng.integers(low=-3, high=99, size=(2, 5))
 ```
 
@@ -375,6 +411,9 @@ Let's take a look at each of these options in turn with the following `(3, 4)` e
 ```{python}
 x = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
 x
+```
+
+```{python}
 x.shape
 ```
 
@@ -391,6 +430,9 @@ The `reshape()` method works just like `resize()`, but it creates a *copy* and r
 
 ```{python}
 x.reshape((3, 4))
+```
+
+```{python}
 x  # still (2, 6)
 ```
 
@@ -406,7 +448,6 @@ We do not even have to specify the complete shape when using the `reshape()` or 
 ```{python}
 x.reshape((6, -1))  # -1 is inferred to mean 2 here
 ```
-
 
 ## Indexing and slicing
 
@@ -447,7 +488,13 @@ Slices pull out multiple elements with the `:` operator to indicate the desired 
 
 ```{python}
 x[1:5]  # start and stop
+```
+
+```{python}
 x[1:5:2]  # start, stop, and step
+```
+
+```{python}
 x[::-1]
 ```
 
@@ -456,9 +503,21 @@ When there is more than one dimension, we can provide indices or slices for each
 ```{python}
 y = np.arange(12).reshape((3, 4))
 y
+```
+
+```{python}
 y[1, 0]  # row 1, column 0
+```
+
+```{python}
 y[1:, 1:3]  # rows 1 through the last, columns 1 and 2
+```
+
+```{python}
 y[:, 3]  # column 3 (the fourth one)
+```
+
+```{python}
 y[1, :]  # row 1 (the second row)
 ```
 
@@ -480,7 +539,6 @@ The following slices can be abbreviated using `...` notation:
 -   `x[:, 1, :, :, 4]` is equal to `x[:, 1, ..., 4]`
 -   `x[:, :, :, :, 3]` is equal to `x[..., 3]`
 
-
 ### Fancy indexing
 
 In contrast to lists, we can even use arrays (or lists) as indices inside the square brackets to pull out several individual elements. This is called fancy indexing.
@@ -488,6 +546,9 @@ In contrast to lists, we can even use arrays (or lists) as indices inside the sq
 ```{python}
 x = np.arange(10, 18, dtype=np.int64)
 x
+```
+
+```{python}
 x[[1, 5, 1, 0]]  # elements 1, 5, 1, and 0
 ```
 
@@ -501,6 +562,9 @@ Because every comparison yields a boolean array, this approach can be used to fi
 
 ```{python}
 x > 15  # boolean array
+```
+
+```{python}
 x[x > 15]
 ```
 
@@ -511,7 +575,6 @@ x[x % 2 != 0] = -1  # % is the remainder operator
 x
 ```
 
-
 ## Array operations
 
 ### Elementwise operations
@@ -521,11 +584,26 @@ As a general rule, NumPy carries out operations element by element. If two array
 ```{python}
 x = np.arange(1, 7).reshape((2, 3))
 x
+```
+
+```{python}
 y = np.arange(7, 13).reshape((2, 3))
 y
+```
+
+```{python}
 x + y
+```
+
+```{python}
 x - y
+```
+
+```{python}
 x * y
+```
+
+```{python}
 x / y
 ```
 
@@ -534,7 +612,6 @@ These operations are *vectorized*, which means that they are automatically appli
 :::{.callout-important}
 Whenever possible, avoid loops over arrays! Loops are very slow and inefficient compared to vectorized operations. It is very rarely necessary to use loops with NumPy arrays, so if you find yourself writing a loop, consider whether you can use vectorized operations instead.
 :::
-
 
 ### Vector and matrix operations
 
@@ -550,6 +627,9 @@ Alternatively, we can use the `np.dot()` function or the `.dot()` method of an a
 
 ```{python}
 np.dot(a, b)
+```
+
+```{python}
 a.dot(b)
 ```
 
@@ -567,7 +647,6 @@ If the shapes are not compatible with matrix multiplication (the number of colum
 
 In summary, we saw that if two arrays have the same shape, operations are performed element by element. Things get a little more complicated when the two arrays have different shapes – we will discuss this so-called broadcasting soon. But before that, there's even more we can do with just a single array using its array methods.
 
-
 ### Array methods
 
 There are many array methods that perform some kind of computation across *all* elements (regardless of the shape), such as calculating the total sum, minimum, maximum, or mean:
@@ -575,7 +654,13 @@ There are many array methods that perform some kind of computation across *all* 
 ```{python}
 x = np.arange(1, 13).reshape((3, 4))
 x
+```
+
+```{python}
 x.sum()
+```
+
+```{python}
 x.mean()
 ```
 
@@ -604,7 +689,6 @@ y.mean(axis=(1, 2))  # compute the means of the four arrays
 
 In this example, `y` has shape `(4, 3, 5)`. Because we compute the mean across axes `1` and `2` (and remembering that Python starts counting at zero), this leaves only axis `0`. Because axis `0` has four elements, we get four individual means.
 
-
 ### Universal functions
 
 Other useful functions are directly available in the `numpy` namespace, for example `np.sin()`, `np.cos()`, `np.exp()`, `np.sqrt()`, and so on. They are vectorized (and therefore operate on all elements) and are referred to as *universal functions* (or short *ufuncs*).
@@ -612,7 +696,6 @@ Other useful functions are directly available in the `numpy` namespace, for exam
 ```{python}
 np.sqrt(x)
 ```
-
 
 ## Broadcasting
 
@@ -647,11 +730,9 @@ y = np.arange(6).reshape((2, 3))  # shape (2, 3) -> (1, 2, 3) -> (3, 2, 3)
 x + y  # works
 ```
 
-
 ## Useful functions
 
 This section summarizes some useful functions that we have not discussed so far.
-
 
 ### Finding unique values
 
@@ -670,7 +751,6 @@ np.unique(x, return_counts=True)
 
 Used like this, the function returns a tuple, where the first element corresponds to the unique elements, and the second element contains their frequencies. In this example, we can see that `1` occurs `2` times, `2` occurs `4` times, and so on.
 
-
 ### Repeating an array
 
 The `np.tile()` function creates a new array by repeating a given array a certain number of times:
@@ -678,11 +758,19 @@ The `np.tile()` function creates a new array by repeating a given array a certai
 ```{python}
 a = np.eye(2, dtype=int)
 a
-np.tile(a, 2)
-np.tile(a, (2, 1))
-np.tile(a, (2, 4))
 ```
 
+```{python}
+np.tile(a, 2)
+```
+
+```{python}
+np.tile(a, (2, 1))
+```
+
+```{python}
+np.tile(a, (2, 4))
+```
 
 ### Sorting an array
 
@@ -691,10 +779,12 @@ The `sort()` method sorts an array in place:
 ```{python}
 x = rng.integers(low=0, high=100, size=15)
 x
+```
+
+```{python}
 x.sort()
 x
 ```
-
 
 ### Sampling from an array
 
@@ -703,9 +793,11 @@ Given an array and a random generator, it is possible to create a random sample 
 ```{python}
 x = np.array([0, 1])
 rng.choice(x, size=20)  # rng is defined in a previous example
-rng.choice(np.arange(20), size=10, replace=False)
 ```
 
+```{python}
+rng.choice(np.arange(20), size=10, replace=False)
+```
 
 ### Shuffling an array
 
@@ -717,7 +809,6 @@ rng.shuffle(x)
 x
 ```
 
-
 ## Additional resources
 
 The [official NumPy website](https://numpy.org/doc/stable/index.html) contains excellent documentation and many tutorials. I specifically recommend the following tutorials for beginners:
@@ -728,7 +819,6 @@ The [official NumPy website](https://numpy.org/doc/stable/index.html) contains e
 If you are coming from MATLAB, this tutorial is for you:
 
 -   [NumPy for MATLAB users](https://numpy.org/doc/stable/user/numpy-for-matlab-users.html)
-
 
 ## Exercises
 

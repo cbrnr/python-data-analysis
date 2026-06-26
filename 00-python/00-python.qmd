@@ -3,7 +3,9 @@ title: "Installing Python"
 subtitle: "A beginner's guide for reproducible Python projects"
 author: "Clemens Brunner"
 date: 2026-06-29
-format: html
+format:
+  html:
+    page-layout: full
 toc: true
 toc-title: ""
 engine: jupyter
@@ -14,18 +16,11 @@ theme:
   dark: [darkly, ../theme-dark.scss]
 ---
 
-```{python}
-#| include: false
-# show output for every expression in a cell, not just the last one
-get_ipython().ast_node_interactivity = "all"
-```
-
 ## Introduction
 
 Setting up and managing a Python project has historically been a rather tedious and complicated task. Fortunately, the [uv](https://docs.astral.sh/uv/) package and project manager solves many of these problems, making it very easy to create a fully reproducible Python environment.
 
 This short beginner's guide will walk you through the essentials – from installing uv to running a Python script. The goal is to help you get started quickly, but since uv is a powerful tool, be sure to check out the [official documentation](https://docs.astral.sh/uv/) for more advanced features and options.
-
 
 ## Installation
 
@@ -55,7 +50,6 @@ uv --version
 
 This should print the version of uv (for example, `0.11.22`). If you get an error message, something went wrong during the installation. In that case, please refer to the [documentation](https://docs.astral.sh/uv/) for troubleshooting.
 
-
 ## Creating a new project
 
 To create a new Python project, change to the directory where you want to create the project (using `cd`) and run the following command in your terminal:
@@ -79,7 +73,6 @@ Note that uv will always use and pin the latest Python version available on your
 uv init my-project --python 3.14
 ```
 :::
-
 
 ## Using the interactive Python interpreter
 
@@ -127,7 +120,6 @@ uv run --python 3.10 --with ipython,pandas ipython
 You might be surprised by how fast uv is! Once it has downloaded all required packages, it caches them for future use, and starting a new interactive session is almost instantaneous.
 :::
 
-
 ## Running a Python script
 
 To run a Python script, you can use the `uv run` command followed by the name of the script. For example, to run the `main.py` script that was created in the project directory, use the following command:
@@ -135,7 +127,6 @@ To run a Python script, you can use the `uv run` command followed by the name of
 ```bash
 uv run main.py
 ```
-
 
 ## Managing project dependencies
 
@@ -150,7 +141,6 @@ This will automatically install the latest version of `numpy` in your project's 
 ```bash
 uv remove numpy
 ```
-
 
 ## Under the hood
 

@@ -3,7 +3,9 @@ title: "IPython"
 subtitle: "An enhanced interactive Python interpreter"
 author: "Clemens Brunner"
 date: 2026-06-29
-format: html
+format:
+  html:
+    page-layout: full
 toc: true
 toc-title: ""
 engine: jupyter
@@ -13,12 +15,6 @@ theme:
   light: [flatly, ../theme-light.scss]
   dark: [darkly, ../theme-dark.scss]
 ---
-
-```{python}
-#| include: false
-# show output for every expression in a cell, not just the last one
-get_ipython().ast_node_interactivity = "all"
-```
 
 ## Introduction
 
@@ -38,7 +34,6 @@ The prompt indicates that Python is waiting for us to type a command. After ente
 ```
 
 All of this is already built into the standard Python interpreter. However, the interactive experience is pretty bare-bones: there is no syntax highlighting, tab completion is rudimentary, there is no shortcut for viewing documentation, printing or changing the working directory requires importing the `os` module, and quickly running a shell command (such as `ls` to list the contents of the working directory) is not possible. All of these things and more are supported in [IPython](https://ipython.readthedocs.io/en/stable/index.html) (see [this page](https://ipython.readthedocs.io/en/stable/interactive/python-ipython-diff.html) for a summary of the most important differences between standard Python and IPython).
-
 
 ## First steps
 
@@ -74,7 +69,6 @@ In addition to the last result, we can also retrieve the two previous ones with 
 
 Finally, all inputs and outputs are also available as `In` (a list) and `Out` (a dictionary). For example, the first input and output can be accessed with `In[1]` and `Out[1]`, respectively.
 
-
 ## Keyboard shortcuts
 
 IPython offers many useful keyboard shortcuts that can significantly speed up an interactive development workflow. The most important shortcuts are:
@@ -89,7 +83,6 @@ IPython offers many useful keyboard shortcuts that can significantly speed up an
 :::{.callout-note}
 Some of these shortcuts are also available in the regular interactive Python interpreter.
 :::
-
 
 ## Magic commands
 
@@ -108,7 +101,6 @@ Magic commands are special IPython commands that provide additional functionalit
 :::{.callout-important}
 Magic commands are *not* valid Python, so use them only in the interactive interpreter – do *not* use them in Python scripts!
 :::
-
 
 ## Shell commands
 
@@ -135,7 +127,6 @@ Running shell commands only works for a given shell. For example, the `date` com
 
 Therefore, always check if there are suitable magic commands available before using shell commands. For example, listing the contents of the working directory can be achieved with `%ls`, and showing the contents of a file can be done with `%pycat`. These magic commands are cross-platform and work regardless of the underlying shell or operating system.
 :::
-
 
 ## Jupyter notebooks
 
