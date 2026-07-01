@@ -134,7 +134,7 @@ IPython includes support for web-based documents for [literate programming](http
 
 [Quarto](https://quarto.org/) builds upon Jupyter notebooks (and many other tools) to provide a scientific and technical publishing system, which can not only render to HTML, but also to PDF, Word, Reveal.js, and more. Because Quarto documents run *all* code cells during rendering, this format is better suited for reproducible documents.
 
-::: {.callout-note}
+::: callout-note
 Quarto and Jupyter support languages other than Python, for example R and Julia.
 :::
 

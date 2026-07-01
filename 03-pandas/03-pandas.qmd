@@ -605,7 +605,7 @@ Notice that we combined two conditions with `and`; we can also use `or`, for exa
 flights.query("month == 11 or month == 12")
 ```
 
-::: {.callout-important}
+::: callout-important
 A common mistake is to use the query `"month == 11 or 12"`, which does not work because the `or` operator requires two complete conditions on both sides.
 :::
 

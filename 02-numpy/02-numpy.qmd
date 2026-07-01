@@ -476,7 +476,7 @@ Negative indexes count from the end of the array, so the last item is:
 x[-1]
 ```
 
-::: {.callout-tip}
+::: callout-tip
 If the resulting index or slice consists only of a single value (a scalar), the result is still a NumPy-specific data type (such as `np.int64`) and not a standard Python data type (such as `int`). In general, this should not be a problem, since you can use these NumPy-specific scalars in the same way as their standard Python counterparts. However, if you want to convert a NumPy-specific type to a standard Python type, you can use the `item()` method:
 
 ```{python}
@@ -641,7 +641,7 @@ B = np.arange(6).reshape((3, 2))
 A @ B
 ```
 
-::: {.callout-note}
+::: callout-note
 If the shapes are not compatible with matrix multiplication (the number of columns of the first operand must equal the number of rows of the second operand), we will get an error.
 :::
 
