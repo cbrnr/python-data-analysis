@@ -250,7 +250,7 @@ The `np.linspace()` function is helpful when you want to evaluate a function at 
 #| eval: false
 import matplotlib.pyplot as plt
 
-x = np.linspace(0, 2 * np.pi, 100)  # 100 values from 0 to 2𝜋
+x = np.linspace(0, 2 * np.pi, 100)
 fig, ax = plt.subplots()
 ax.plot(x, np.sin(x))
 ```
